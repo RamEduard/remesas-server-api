@@ -1,15 +1,19 @@
 image: docker:latest
 
-before_script:
-    - docker info
+services:
+  - docker:dind
 
 variables:
+  STAGING_REGISTRY: rameduard/remesas-server-api
   CI_REGISTRY_IMAGE: registry.gitlab.com/rameduard/remesas-server-api
+
+before_script:
+  - docker login -u gitlab-ci -p $CI_BUILD_TOKEN $STAGING_REGISTRY
 
 build_image:
   script:
     - echo "Build docker image $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
-    - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   only:
     - master
