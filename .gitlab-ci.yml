@@ -4,11 +4,10 @@ services:
   - docker:dind
 
 variables:
-  STAGING_REGISTRY: rameduard/remesas-server-api
   CI_REGISTRY_IMAGE: registry.gitlab.com/rameduard/remesas-server-api
 
 before_script:
-  - docker login -u gitlab-ci -p $CI_BUILD_TOKEN $STAGING_REGISTRY
+  - docker login -u gitlab-ci -p $CI_BUILD_TOKEN $CI_REGISTRY_IMAGE
 
 build_image:
   script:
