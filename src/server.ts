@@ -4,7 +4,7 @@ import compression from 'compression'
 import cors from 'cors'
 
 import { PORT, MONGO_URL } from './config'
-import { rateRouter, userRouter } from './routes'
+import { mainRouter, rateRouter, userRouter } from './routes'
 import { localBitcoinsService } from './services'
 
 const app = express()
@@ -19,6 +19,7 @@ app.use(cors())
 app.set('service.localbitcoins', localBitcoinsService)
 
 // Routes
+app.use(mainRouter)
 app.use('/rates', rateRouter)
 app.use('/users', userRouter)
 
