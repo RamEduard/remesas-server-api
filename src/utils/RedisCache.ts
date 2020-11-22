@@ -14,6 +14,8 @@ export default class RedisCache extends Tedis {
             port: <number>REDIS_PORT || 6379,
             host: REDIS_HOST || 'localhost'
         })
+
+        console.log(`Connecting to redis://${REDIS_HOST}:${REDIS_PORT}`)
     }
 
     public async add(key:string, value:any) {
