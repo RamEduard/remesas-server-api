@@ -1,6 +1,6 @@
 {
   "name": "remesas-server-api",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "scripts": {
     "copy:env-dev": "cp .env.development .env",
@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apollo-server": "^2.19.0",
     "axios": "^0.21.0",
     "axios-es6-class": "^4.2.2",
     "body-parser": "^1.19.0",
@@ -22,6 +23,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "graphql": "^15.4.0",
     "lodash": "^4.17.20",
     "mongoose": "^5.10.15",
     "querystring": "^0.2.0",

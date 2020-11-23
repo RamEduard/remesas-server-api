@@ -6,9 +6,12 @@ export const router = express.Router({
 });
 
 router.get('/', async (req: Request, res: Response) => {
-    // return rateController.localBitcoinsSignature(req, res);
     return rateController.index(req, res);
 });
+
+router.get('/btc-avg', async (req: Request, res: Response) => {
+    return rateController.btcAvg(req, res);
+})
 
 router.get('/buy/:currencyCode', async (req: Request, res: Response) => {
     return rateController.buyByCurrency(req, res)

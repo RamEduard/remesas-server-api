@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { isEmpty } from 'lodash';
 
 import LocalBitcoinsService from '../../services/LocalBitcoins/LocalBitcoinsService';
-import { CrudController } from '../CrudController';
 
 export class RateController {
 
@@ -18,14 +17,11 @@ export class RateController {
 
         // const ads = await localBitcoinsService.getAds()
 
-        // const buyBitcoinsOnline = await localBitcoinsService.getBuyBitcoinsOnline('ARS')
-
         // const tickerAllCurrencies = await localBitcoinsService.getTickerAllCurrencies()
 
         res.json({
             data: {
                 // ads,
-                // buyBitcoinsOnline,
                 countries,
                 currencies: currencies.currencies,
                 btcAvg
@@ -33,6 +29,22 @@ export class RateController {
             },
             message: 'GET /rates request received'
         });
+    }
+
+    /**
+     * btcAvg
+     * 
+     * @param req Request
+     * @param res Response
+     */
+    public async btcAvg(req: Request<import("express-serve-static-core").ParamsDictionary>, res: Response) {
+        const localBitcoinsService:LocalBitcoinsService = req.app.get('service.localbitcoins')
+
+        const btcAvg = await localBitcoinsService.getBtcAvgAllCurrencies()
+
+        res.json({
+            data: btcAvg
+        })
     }
 
     /**
@@ -59,7 +71,7 @@ export class RateController {
     }
 
     /**
-     * buyByCurrency
+     * sellByCurrency
      */
     public async sellByCurrency(req: Request<import("express-serve-static-core").ParamsDictionary>, res: Response) {
         const localBitcoinsService:LocalBitcoinsService = req.app.get('service.localbitcoins')
