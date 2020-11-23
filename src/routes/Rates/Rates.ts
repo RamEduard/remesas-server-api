@@ -21,6 +21,6 @@ router.get('/sell/:currencyCode', async (req: Request, res: Response) => {
     return rateController.sellByCurrency(req, res)
 })
 
-// router.get('/localbitcoins/signature', (req: Request, res: Response) => {
-    // return rateController.localBitcoinsSignature(req, res);
-// });
+router.get('/by/:currencyCode', async (req: Request, res: Response) => {
+    return rateController.byCurrencyCode(req, res)
+})

@@ -23,6 +23,8 @@ app.use(mainRouter)
 app.use('/rates', rateRouter)
 app.use('/users', userRouter)
 
+// TODO: CRON JOBS
+
 app.listen(PORT, () => {
     console.log(`🚀 Server is listening on port ${PORT}`)
 })

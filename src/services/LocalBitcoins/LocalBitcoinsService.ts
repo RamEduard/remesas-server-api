@@ -8,6 +8,7 @@ import querystring from 'querystring'
 import RedisCache from '../../utils/RedisCache'
 
 import { LOCAL_BITCOINS_API_KEY, LOCAL_BITCOINS_API_SECRET } from '../../config'
+import { LocalBitcoinsAdResponse, LocalBitcoinsAvgResponse } from './types'
 
 /**
  * Api Config
@@ -171,7 +172,7 @@ export default class LocalBitcoinsService extends Api {
 	 * 
 	 * @param {boolean} refresh Refresh cache
 	 */
-	async getBtcAvgAllCurrencies(refresh = false) {
+	async getBtcAvgAllCurrencies(refresh = false): Promise<LocalBitcoinsAvgResponse> {
 		const existsCache = await this._cache.exists('LocalBitcoins.btcAvg')
 
 		if (refresh || existsCache === 0) {
@@ -184,10 +185,17 @@ export default class LocalBitcoinsService extends Api {
 		return this._cache.getValue('LocalBitcoins.btcAvg')
 	}
 
-	async getBuyBitcoinsOnline(currencyCode:string, refresh:boolean = false) {
+	/**
+	 * getBuyBitcoinsOnline
+	 * 
+	 * @param {string} currencyCode  Currency code 3 letters uppercase
+	 * @param {string} paymentMethod Valid payment method listed on /api/payment_methods
+	 * @param {boolean} refresh      Refresh cache
+	 */
+	async getBuyBitcoinsOnline(currencyCode: string, paymentMethod: string = 'national-bank-transfer', refresh: boolean = false): Promise<LocalBitcoinsAdResponse | null> {
 		try {
-			const response = await this.publicMethod(`buy-bitcoins-online/${currencyCode}`, {}, '.json')
-			
+			const response = await this.publicMethod(`buy-bitcoins-online/${currencyCode}/${paymentMethod}`, {}, '.json')
+
 			return get(response, 'data.data') || null
 		} catch (e) {
 			console.log('LocalBitcoinsService.getBuyBitcoinsOnline:error', e.message)
@@ -195,10 +203,17 @@ export default class LocalBitcoinsService extends Api {
 		}
 	}
 
-	async getSellBitcoinsOnline(currencyCode:string, refresh:boolean = false) {
+	/**
+	 * getSellBitcoinsOnline
+	 * 
+	 * @param {string} currencyCode  Currency code 3 letters uppercase
+	 * @param {string} paymentMethod Valid payment method listed on /api/payment_methods
+	 * @param {boolean} refresh      Refresh cache
+	 */
+	async getSellBitcoinsOnline(currencyCode: string, paymentMethod: string = 'national-bank-transfer', refresh: boolean = false): Promise<LocalBitcoinsAdResponse | null> {
 		try {
-			const response = await this.publicMethod(`sell-bitcoins-online/${currencyCode}`, {}, '.json')
-			
+			const response = await this.publicMethod(`sell-bitcoins-online/${currencyCode}/${paymentMethod}`, {}, '.json')
+
 			return get(response, 'data.data') || null
 		} catch (e) {
 			console.log('LocalBitcoinsService.getSellBitcoinsOnline:error', e.message)
@@ -206,10 +221,10 @@ export default class LocalBitcoinsService extends Api {
 		}
 	}
 
-	async getAds(refresh:boolean = false) {
+	async getAds(refresh: boolean = false) {
 		try {
 			const response = await this.privateMethod('api/ads')
-			
+
 			return get(response, 'data.data') || null
 		} catch (e) {
 			console.log('LocalBitcoinsService.apiRequest:error', e.message)
