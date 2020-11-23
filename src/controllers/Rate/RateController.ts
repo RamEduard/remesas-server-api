@@ -139,7 +139,7 @@ export class RateController {
             const avgBuy = sumBuyPrices / tempBuyPrices?.length
 
             // Buscar el más alto
-            const tempSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price)).sort((a, b) => b - a) || []
+            const tempSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price)).sort((a, b) => a - b) || []
             const sumSellPrices = tempSellPrices?.reduce((a, b) => a + b, 0) || []
             // @ts-ignore
             const avgSell = sumSellPrices / tempSellPrices?.length
