@@ -133,16 +133,28 @@ export class RateController {
             ])
 
             // Buscar el más bajo
-            const tempBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price)).sort((a, b) => a - b) || []
+            const tempBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
             const sumBuyPrices = tempBuyPrices?.reduce((a, b) => a + b, 0) || []
             // @ts-ignore
             const avgBuy = sumBuyPrices / tempBuyPrices?.length
 
+            // Precio en USD
+            const tempUsdBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price_usd)).filter(a => a > 1).sort((a, b) => a - b) || []
+            const sumUsdBuyPrices = tempUsdBuyPrices?.reduce((a, b) => a + b, 0) || []
+            // @ts-ignore
+            const avgUsdBuy = sumUsdBuyPrices / tempUsdBuyPrices?.length
+
             // Buscar el más alto
-            const tempSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price)).sort((a, b) => a - b) || []
+            const tempSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
             const sumSellPrices = tempSellPrices?.reduce((a, b) => a + b, 0) || []
             // @ts-ignore
             const avgSell = sumSellPrices / tempSellPrices?.length
+
+            // Precio en USD
+            const tempUsdSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price_usd)).filter(a => a > 1).sort((a, b) => a - b) || []
+            const sumUsdSellPrices = tempUsdSellPrices?.reduce((a, b) => a + b, 0) || []
+            // @ts-ignore
+            const avgUsdSell = sumUsdSellPrices / tempUsdSellPrices?.length
     
             // Avg, Buy, Sell, Spread
             // Max, Min, Count ads
@@ -152,17 +164,26 @@ export class RateController {
                     buy: {
                         avg: avgBuy,
                         min: tempBuyPrices[0],
-                        max: tempBuyPrices[tempBuyPrices.length - 1]
+                        max: tempBuyPrices[tempBuyPrices.length - 1],
+                        avg_usd: avgUsdBuy,
+                        min_usd: tempUsdBuyPrices[0],
+                        max_usd: tempUsdBuyPrices[tempUsdBuyPrices.length - 1],
                     },
                     sell: {
                         avg: avgSell,
                         min: tempSellPrices[0],
-                        max: tempSellPrices[tempSellPrices.length - 1]
+                        max: tempSellPrices[tempSellPrices.length - 1],
+                        avg_usd: avgUsdSell,
+                        min_usd: tempUsdSellPrices[0],
+                        max_usd: tempUsdSellPrices[tempUsdSellPrices.length - 1],
                     },
                     spread: {
                         avg: 1 - (avgSell / avgBuy),
                         min: 1 - (tempSellPrices[0] / tempBuyPrices[0]),
-                        max: 1 - (tempSellPrices[tempSellPrices.length - 1] / tempBuyPrices[tempBuyPrices.length - 1])
+                        max: 1 - (tempSellPrices[tempSellPrices.length - 1] / tempBuyPrices[tempBuyPrices.length - 1]),
+                        avg_usd: 1 - (avgUsdSell / avgUsdBuy),
+                        min_usd: 1 - (tempUsdSellPrices[0] / tempUsdBuyPrices[0]),
+                        max_usd: 1 - (tempUsdSellPrices[tempUsdSellPrices.length - 1] / tempUsdBuyPrices[tempUsdBuyPrices.length - 1]),
                     }
                 }
             }
