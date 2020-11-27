@@ -110,7 +110,7 @@ export class RateController {
         const localBitcoinsService:LocalBitcoinsService = req.app.get('service.localbitcoins')
 
         const { currencyCode } = req.params
-        const { refresh, payment_method = } = req.query
+        const { refresh, payment_method } = req.query
 
         if (isEmpty(currencyCode)) 
             return res.status(400).json({
@@ -127,8 +127,8 @@ export class RateController {
 
         if (refresh || existsCache === 0) {
             const [buy, sell, avg] = await Promise.all([
-                localBitcoinsService.getBuyBitcoinsOnline(currencyCode, payment_method!),
-                localBitcoinsService.getSellBitcoinsOnline(currencyCode, payment_method!),
+                localBitcoinsService.getBuyBitcoinsOnline(currencyCode, <string>payment_method!),
+                localBitcoinsService.getSellBitcoinsOnline(currencyCode, <string>payment_method!),
                 localBitcoinsService.getBtcAvgAllCurrencies()
             ])
 
