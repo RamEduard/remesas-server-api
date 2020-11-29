@@ -6,11 +6,13 @@ import typeDefs from './schema'
 import resolvers from './resolvers'
 import RatesDataSource from '../dataSources/RatesDataSource'
 import RedisCache from '../utils/RedisCache'
+import AuthDataSource from '../dataSources/AuthDataSource'
 
-const getContext = async ({ headers, app }: Request<import("express-serve-static-core").ParamsDictionary>) => {
+const getContext = async ({ headers, app, user }: Request<import("express-serve-static-core").ParamsDictionary>) => {
 	return {
 		headers,
-        app
+		app,
+		user
 	}
 }
 
@@ -29,6 +31,7 @@ const apollo = async (app: Express, cache1h: RedisCache) => {
         // @ts-ignore
 		context: async ({ req }) => getContext(req),
 		dataSources: () => ({
+			auth: new AuthDataSource(),
 			rates: new RatesDataSource(app.get('service.localbitcoins'), cache1h)
 		}),
 	})

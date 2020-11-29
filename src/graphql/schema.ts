@@ -14,12 +14,17 @@ export default gql`
             currencyCode: String
             filters: RatesFilters
         ): RatesByCurrency
+        "User authenticated info"
+        userInfo: User
     }
 
     "Mutations"
-    # type Mutation {
-
-    # }
+    type Mutation {
+        "Auth Login"
+        signin(email: String!, password: String!): JwtToken
+        "Auth Register"
+        signup(user: InputUser): JwtToken
+    }
 
     type ApiInfo {
         author: String
@@ -58,5 +63,23 @@ export default gql`
         buy: RatesByCurrencyValues
         sell: RatesByCurrencyValues
         spread: RatesByCurrencyValues
+    }
+
+    type JwtToken {
+        token: String
+        expirationDate: String
+    }
+
+    input InputUser {
+        firstName: String!
+        lastName: String!
+        email: String!
+        password: String!
+    }
+
+    type User {
+        firstName: String
+        lastName: String
+        email: String
     }
 `

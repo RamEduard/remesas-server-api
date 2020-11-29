@@ -14,5 +14,11 @@ export const {
     MONGO_URL = 'mongodb://localhost:27017/remesas',
     // Redis
     REDIS_HOST = 'localhost',
-    REDIS_PORT = 6379
+    REDIS_PORT = 6379,
+    // JWT
+    JWT_ALGORITHM = 'HS256',
+    JWT_LIFETIME = 86400,
+    JWT_SECRET = 'secret',
+    // Crypto
+    BCRYPT_ROUNDS = 10,
 } = process.env
