@@ -1,7 +1,7 @@
 {
   "name": "remesas-server-api",
   "version": "1.0.3",
-  "description": "",
+  "description": "Remesas Server API (REST & Apollo GraphQL)",
   "scripts": {
     "copy:env-dev": "cp .env.development .env",
     "start:dev": "nodemon dist/server.js --unhandled-rejections=strict",
@@ -12,11 +12,16 @@
     "start": "node dist/server.js",
     "version": "node version.js && git add package.json"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "api",
+    "rest",
+    "graphql"
+  ],
+  "author": "Ramon Serrano <ramon.calle.88@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "@apollo/federation": "^0.20.6",
+    "apollo-datasource-mongodb": "^0.2.8",
     "apollo-server": "^2.19.0",
     "apollo-server-express": "^2.19.0",
     "app-root-dir": "^1.0.2",

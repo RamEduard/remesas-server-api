@@ -1,3 +1,4 @@
+import AppRootDir from 'app-root-dir'
 import express, { Request, Response } from 'express';
 
 export const router = express.Router({
@@ -5,12 +6,13 @@ export const router = express.Router({
 });
 
 router.get('/', (req: Request, res: Response) => {
+    const pjson = require(`${AppRootDir.get()}/package.json`)
+
     res.json({
         data: {
-            author: "Ramon Serrano",
-            email: "ramon.calle.88@gmail.com",
-            title: 'Remesas Server API',
-            version: 'v1.0.0',
+            author: pjson.author,
+            title: pjson.description,
+            version: pjson.version
         }
     })
 })

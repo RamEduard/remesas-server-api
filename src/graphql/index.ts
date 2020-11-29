@@ -4,6 +4,8 @@ import { ApolloServer } from 'apollo-server-express'
 
 import typeDefs from './schema'
 import resolvers from './resolvers'
+import RatesDataSource from '../dataSources/RatesDataSource'
+import RedisCache from '../utils/RedisCache'
 
 const getContext = async ({ headers, app }: Request<import("express-serve-static-core").ParamsDictionary>) => {
 	return {
@@ -12,7 +14,7 @@ const getContext = async ({ headers, app }: Request<import("express-serve-static
 	}
 }
 
-const apollo = async (app: Express) => {
+const apollo = async (app: Express, cache1h: RedisCache) => {
 	const federated = []
 
 	// Agregar los tipos y resolvers de raíz
@@ -26,7 +28,9 @@ const apollo = async (app: Express) => {
         introspection: true,
         // @ts-ignore
 		context: async ({ req }) => getContext(req),
-		// dataSources: () => DataSources({ backofficeDb, hotelDb }),
+		dataSources: () => ({
+			rates: new RatesDataSource(app.get('service.localbitcoins'), cache1h)
+		}),
 	})
 
 	return server.applyMiddleware({ app, path: '/' })
