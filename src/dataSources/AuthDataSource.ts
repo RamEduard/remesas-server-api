@@ -1,9 +1,8 @@
 import { DataSource } from 'apollo-datasource'
 import { ApolloError } from 'apollo-server'
-import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-import { BCRYPT_ROUNDS, JWT_LIFETIME, JWT_ALGORITHM, JWT_SECRET } from '../config'
+import { JWT_LIFETIME, JWT_ALGORITHM, JWT_SECRET } from '../config'
 import UserModel from '../models/UserModel'
 
 export default class AuthDataSource extends DataSource {
@@ -18,6 +17,8 @@ export default class AuthDataSource extends DataSource {
 		const user = await UserModel.findOne({ email: email.toLowerCase() })
 
 		if (!user) return new ApolloError(`Email ${email} not found.`, '401')
+
+		if (!user.verified) return new ApolloError(`User hasn't been verified yet.`, '403')
 
 		if (!user.comparePasswordSync(password)) return new ApolloError('Username or password invalid.')
 
@@ -43,26 +44,22 @@ export default class AuthDataSource extends DataSource {
 		try {
 			const userExists = await UserModel.findOne({ email: user.email.toLowerCase() })
 
-            if (userExists) return new ApolloError('Username exists.', '200')
+            if (userExists) return new ApolloError('Email exists.', '200')
             
 			const userDoc = new UserModel({ ...user })
 
-			const userSaved = await userDoc.save()
-
-			// JWT
-			const payload = {
-				sub: userSaved._id,
-				exp: Date.now() + parseInt(<string>JWT_LIFETIME),
-				email: user.email.toLowerCase(),
-			}
+			await userDoc.save()
 
 			return {
-				// @ts-ignore
-				token: jwt.sign(JSON.stringify(payload), JWT_SECRET, { algorithm: JWT_ALGORITHM }),
-				expirationDate: new Date(payload.exp).toISOString(),
+				saved: true,
+				message: 'User should be verified by administrator before logged in.'
 			}
 		} catch (e) {
 			console.log(e)
+			return {
+				saved: false,
+				message: e.message
+			}
 		}
 	}
 }

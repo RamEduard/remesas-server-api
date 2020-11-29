@@ -8,10 +8,9 @@ export interface UserDocument extends Document {
 	firstName: string
 	lastName: string
 	password: string
-	passwordResetToken: string
-	passwordResetExpires: Date
 
 	tokens: AuthToken[]
+	verified: boolean
 
 	profile: {
 		name: string
@@ -49,8 +48,6 @@ const UserSchema: Schema = new Schema(
 			unique: true,
 		},
 		password: String,
-		passwordResetToken: String,
-		passwordResetExpires: Date,
 
 		tokens: Array,
 
@@ -61,6 +58,7 @@ const UserSchema: Schema = new Schema(
 			website: String,
 			picture: String,
 		},
+		verified: Boolean
 	},
 	{ timestamps: true }
 )

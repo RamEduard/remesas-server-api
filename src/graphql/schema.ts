@@ -23,7 +23,7 @@ export default gql`
         "Auth Login"
         signin(email: String!, password: String!): JwtToken
         "Auth Register"
-        signup(user: InputUser): JwtToken
+        signup(user: InputUser): SignUpResponse
     }
 
     type ApiInfo {
@@ -81,5 +81,10 @@ export default gql`
         firstName: String
         lastName: String
         email: String
+    }
+
+    type SignUpResponse {
+        saved: Boolean
+        message: String
     }
 `
