@@ -1,4 +1,5 @@
 import AppRootDir from 'app-root-dir'
+import { isEmpty } from 'lodash'
 
 import { ContextResolver } from './types'
 
@@ -16,10 +17,10 @@ const resolvers = {
 				version: pjson.version,
 			}
 		},
-		localBitcoinsAvgAllCurrencies: (_: any, args: any, { dataSources }: ContextResolver) =>
-			dataSources.rates.btcAvg(args),
-		ratesByCurrency: (_: any, { currencyCode, filters }: any, { dataSources }: ContextResolver) =>
-			dataSources.rates.ratesByCurrency(currencyCode, filters),
+		localBitcoinsAvgAllCurrencies: (_: any, args: any, { dataSources, user }: ContextResolver) =>
+			!isEmpty(user) && dataSources.rates.btcAvg(args),
+		ratesByCurrency: (_: any, { currencyCode, filters }: any, { dataSources, user }: ContextResolver) =>
+			!isEmpty(user) && dataSources.rates.ratesByCurrency(currencyCode, filters),
 		userInfo: (_: any, args: any, { user }: ContextResolver) => user
 	},
 	Mutation: {

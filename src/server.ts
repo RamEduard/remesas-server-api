@@ -32,17 +32,24 @@ const cache1h = new RedisCache(3600)
 // MongoDB
 connectMongo({ db: MONGO_URL })
 
-// JWT middleware isAuthenticated
-app.use(isAuthenticated)
-
 // Routes
 app.use(mainRouter)
-app.use('/rates', rateRouter)
+app.use('/rates', isAuthenticated, rateRouter)
 app.use('/users', userRouter)
 
 // Error handlers
 // @ts-ignore
 app.use((err, req, res, next) => {
+    if ('No auth token' === err.message) {
+        return res.status(401).json({
+            data: null,
+            error: {
+                code: 401,
+                message: 'Unauthorized'
+            },
+            message: err.message
+        })
+    }
     if (err.statusCode) {
         return res.status(err.statusCode || 500).json({
             data: null,

@@ -36,7 +36,7 @@ const apollo = async (app: Express, cache1h: RedisCache) => {
 		}),
 	})
 
-	return server.applyMiddleware({ app, path: '/' })
+	return server.applyMiddleware({ app, path: '/graphql' })
 }
 
 export default apollo
