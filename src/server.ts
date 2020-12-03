@@ -37,6 +37,15 @@ app.use(mainRouter)
 app.use('/rates', isAuthenticated, rateRouter)
 app.use('/users', userRouter)
 
+// Authorization middleware
+app.use(async (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {    
+        // inyectamos los datos de usuario en la request
+        req.user = user
+        next()
+    })(req, res, next)
+})
+
 // Error handlers
 // @ts-ignore
 app.use((err, req, res, next) => {
