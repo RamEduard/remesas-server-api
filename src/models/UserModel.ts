@@ -20,6 +20,8 @@ export interface UserDocument extends Document {
 		picture: string
 	}
 
+	roles: string[]
+
     comparePassword: comparePasswordFunction
     comparePasswordSync: comparePasswordSyncFunction
 }
@@ -51,6 +53,17 @@ const UserSchema: Schema = new Schema(
 
 		tokens: Array,
 
+		config: {
+			pairs: [String],
+			// buyFilters: Object,
+			// sellFilters: Object
+			default: {
+				pairs: [],
+				buyFilters: null,
+				sellFilters: null
+			}
+		},
+
 		profile: {
 			name: String,
 			gender: String,
@@ -58,6 +71,9 @@ const UserSchema: Schema = new Schema(
 			website: String,
 			picture: String,
 		},
+
+		roles: [String],
+
 		verified: Boolean
 	},
 	{ timestamps: true }
