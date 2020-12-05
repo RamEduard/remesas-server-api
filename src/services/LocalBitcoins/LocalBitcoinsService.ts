@@ -25,7 +25,7 @@ export default class LocalBitcoinsService extends Api {
 
 	constructor() {
 		super(apiConfig)
-		this._cache = new RedisCache(8640)
+		this._cache = new RedisCache(600) // 10 minutes
 	}
 
 	/**

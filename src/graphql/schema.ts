@@ -16,6 +16,18 @@ export default gql`
         ): RatesByCurrency
         "User authenticated info"
         userInfo: User
+        "Dashboard"
+        dashboard: DashboardResponse
+        "Buy on LocalBitboins by currency code"
+        localBitcoinsBuy(
+            currencyCode: String!
+            filters: RatesFilters
+        ): LocalBitcoinsAdResponse
+        "Sell on LocalBitboins by currency code"
+        localBitcoinsSell(
+            currencyCode: String!
+            filters: RatesFilters
+        ): LocalBitcoinsAdResponse
     }
 
     "Mutations"
@@ -51,6 +63,7 @@ export default gql`
 
     type RatesByCurrencyValues {
         avg: Float
+        first: Float
         min: Float
         max: Float
         avg_usd: Float
@@ -86,5 +99,71 @@ export default gql`
     type SignUpResponse {
         saved: Boolean
         message: String
+    }
+
+    type ExchangeRate {
+        label: String
+        pair: String
+        rate: Float
+    }
+
+    type DashboardResponse {
+        btcRates: [ExchangeRate]
+    }
+
+    type LocalBitcoinsAd {
+        ad_id: String,
+        profile: LocalBitcoinsProfile
+        visible: Boolean
+        hidden_by_opening_hours: Boolean
+        location_string: String
+        countrycode: String
+        city: String
+        trade_type: String
+        online_provider: String
+        first_time_limit_btc: String
+        volume_coefficient_btc: String
+        sms_verification_required: String
+        currency: String
+        lat: Float
+        lon: Float
+        min_amount: Float
+        max_amount: Float
+        max_amount_available: Float
+        temp_price_usd: Float
+        temp_price: Float
+        created_at: String
+        require_feedback_score: Float
+        require_trade_volume: Float
+        msg: String
+        bank_name: String
+        atm_model: String
+        require_trusted_by_advertiser: Boolean
+        require_identification: Boolean
+        is_local_office: Boolean
+        payment_window_minutes: Float
+        limit_to_fiat_amounts: String
+    }
+
+    type LocalBitcoinsProfile {
+        username: String
+        trade_count: String
+        feedback_score: Float
+        name: String
+        last_online: String
+    }
+
+    type LocalBitcoinsAction {
+        public_view: String
+    }
+
+    type LocalBitcoinsListAd {
+        data: LocalBitcoinsAd,
+        actions: LocalBitcoinsAction
+    }
+
+    type LocalBitcoinsAdResponse {
+        ad_list: [LocalBitcoinsListAd],
+        ad_count: Int
     }
 `

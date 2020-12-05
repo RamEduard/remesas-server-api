@@ -3,13 +3,15 @@ import { ApolloError } from 'apollo-server'
 import { isEmpty } from 'lodash'
 
 import LocalBitcoinsService from '../services/LocalBitcoins/LocalBitcoinsService'
+import { LocalBitcoinsAdResponse } from '../services/LocalBitcoins/types'
 import RedisCache from '../utils/RedisCache'
+import CalculatorInstance from '../utils/Calculator'
 
 export default class RatesDataSource extends DataSource {
     
     constructor(
         private localBitcoinsService: LocalBitcoinsService,
-        private _cache1h: RedisCache
+        private _cache10min: RedisCache
     ) {
         super()
     }
@@ -37,12 +39,12 @@ export default class RatesDataSource extends DataSource {
      * @param {RatesFilters} filters Filter data
      * @param {boolean} refresh      Refresh cache
      */
-    async ratesByCurrency(currencyCode: string, filters: RatesFilters, refresh = false) {
+    async ratesByCurrency(currencyCode: string, filters: RatesFilters, refresh = true) {
         // Invalid currencyCode
         if (isEmpty(currencyCode)) return new ApolloError(`Param currencyCode is invalid.`, '400')
 
         // Caché por 1h
-        const existsCache = await this._cache1h.exists(`RatesDataSource.ratesByCurrency.${currencyCode}`)
+        const existsCache = await this._cache10min.exists(`RatesDataSource.ratesByCurrency.${currencyCode}`)
 
         if (refresh || existsCache === 0) {
             const [buy, sell, avg] = await Promise.all([
@@ -88,6 +90,7 @@ export default class RatesDataSource extends DataSource {
                 },
                 buy: {
                     avg: avgBuy,
+                    first: buy?.ad_list[0].data.temp_price,
                     min: tempBuyPrices[0],
                     max: tempBuyPrices[tempBuyPrices.length - 1],
                     avg_usd: avgUsdBuy,
@@ -96,6 +99,7 @@ export default class RatesDataSource extends DataSource {
                 },
                 sell: {
                     avg: avgSell,
+                    first: sell?.ad_list[0].data.temp_price,
                     min: tempSellPrices[0],
                     max: tempSellPrices[tempSellPrices.length - 1],
                     avg_usd: avgUsdSell,
@@ -104,6 +108,7 @@ export default class RatesDataSource extends DataSource {
                 },
                 spread: {
                     avg: 1 - (avgSell / avgBuy),
+                    first: 0,
                     min: 1 - (tempSellPrices[0] / tempBuyPrices[0]),
                     max: 1 - (tempSellPrices[tempSellPrices.length - 1] / tempBuyPrices[tempBuyPrices.length - 1]),
                     avg_usd: 1 - (avgUsdSell / avgUsdBuy),
@@ -112,11 +117,51 @@ export default class RatesDataSource extends DataSource {
                 }
             }
 
+            response.spread.first = CalculatorInstance.spread(
+                Number(response.buy.first),
+                Number(response.sell.first),
+                Number(avg[currencyCode].rates.last)
+            )
+
             // add cache
-            return await this._cache1h.add(`RatesDataSource.ratesByCurrency.${currencyCode}`, response)
+            return await this._cache10min.add(`RatesDataSource.ratesByCurrency.${currencyCode}`, response)
         }
 
-        return await this._cache1h.getValue(`RatesDataSource.ratesByCurrency.${currencyCode}`)
+        return await this._cache10min.getValue(`RatesDataSource.ratesByCurrency.${currencyCode}`)
+    }
+
+    /**
+     * Buy local bitcoins by currency
+     * @param {string} currencyCode  Currency code 3 letters uppercase
+     * @param {RatesFilters} filters Filter data
+     * @param {boolean} cache        Refresh cache
+     */
+    async localBitcoinsBuy(currencyCode: string, filters: RatesFilters, cache = false): Promise<ApolloError|LocalBitcoinsAdResponse|null> {
+        // Invalid currencyCode
+        if (isEmpty(currencyCode)) return new ApolloError(`Param currencyCode is invalid.`, '400')
+
+        const buyResult = await this.localBitcoinsService.getBuyBitcoinsOnline(currencyCode, filters?.paymentMethod)
+
+        if (buyResult === null) return {
+            ad_count: 0,
+            ad_list: []
+        }
+
+        return buyResult
+    }
+
+    async localBitcoinsSell(currencyCode: string, filters: RatesFilters, cache = false): Promise<ApolloError|LocalBitcoinsAdResponse|null> {
+        // Invalid currencyCode
+        if (isEmpty(currencyCode)) return new ApolloError(`Param currencyCode is invalid.`, '400')
+
+        const sellResult = await this.localBitcoinsService.getSellBitcoinsOnline(currencyCode, filters?.paymentMethod)
+
+        if (sellResult === null) return {
+            ad_count: 0,
+            ad_list: []
+        }
+
+        return sellResult
     }
 }
 

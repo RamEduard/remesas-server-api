@@ -7,6 +7,7 @@ import resolvers from './resolvers'
 import RatesDataSource from '../dataSources/RatesDataSource'
 import RedisCache from '../utils/RedisCache'
 import AuthDataSource from '../dataSources/AuthDataSource'
+import DashboardDataSource from '../dataSources/DashboardDataSource'
 
 const getContext = async ({ headers, app, user }: Request<import("express-serve-static-core").ParamsDictionary>) => {
 	return {
@@ -16,7 +17,7 @@ const getContext = async ({ headers, app, user }: Request<import("express-serve-
 	}
 }
 
-const apollo = async (app: Express, cache1h: RedisCache) => {
+const apollo = async (app: Express, cache10min: RedisCache) => {
 	const federated = []
 
 	// Agregar los tipos y resolvers de raíz
@@ -32,7 +33,8 @@ const apollo = async (app: Express, cache1h: RedisCache) => {
 		context: async ({ req }) => getContext(req),
 		dataSources: () => ({
 			auth: new AuthDataSource(),
-			rates: new RatesDataSource(app.get('service.localbitcoins'), cache1h)
+			dashboard: new DashboardDataSource(app.get('service.localbitcoins'), cache10min),
+			rates: new RatesDataSource(app.get('service.localbitcoins'), cache10min)
 		}),
 	})
 

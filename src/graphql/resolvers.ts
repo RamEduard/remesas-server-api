@@ -17,11 +17,35 @@ const resolvers = {
 				version: pjson.version,
 			}
 		},
+		/**
+		 * All avg btc currencies
+		 */
 		localBitcoinsAvgAllCurrencies: (_: any, args: any, { dataSources, user }: ContextResolver) =>
 			!isEmpty(user) && dataSources.rates.btcAvg(args),
+		/**
+		 * Rates by currency
+		 */
 		ratesByCurrency: (_: any, { currencyCode, filters }: any, { dataSources, user }: ContextResolver) =>
 			!isEmpty(user) && dataSources.rates.ratesByCurrency(currencyCode, filters),
-		userInfo: (_: any, args: any, { user }: ContextResolver) => user
+		/**
+		 * User info
+		 */
+		userInfo: (_: any, args: any, { user }: ContextResolver) => user,
+		/**
+		 * Dashboard by user
+		 */
+		dashboard: (_: any, args: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.dashboard.dashboardByUser(args, user),
+		/**
+		 * LocalBitcoins buy
+		 */
+		localBitcoinsBuy: (_: any, { currencyCode, filters }: any, { dataSources, user }: ContextResolver) =>
+			!isEmpty(user) && dataSources.rates.localBitcoinsBuy(currencyCode, filters),
+		/**
+		 * LocalBitcoins buy
+		 */
+		localBitcoinsSell: (_: any, { currencyCode, filters }: any, { dataSources, user }: ContextResolver) =>
+			!isEmpty(user) && dataSources.rates.localBitcoinsSell(currencyCode, filters),
 	},
 	Mutation: {
 		signin: (_: any, { email, password }: any, { dataSources }: ContextResolver) => 

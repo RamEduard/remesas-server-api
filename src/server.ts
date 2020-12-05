@@ -27,7 +27,7 @@ app.use(passport.initialize())
 app.set('service.localbitcoins', localBitcoinsService)
 
 // Redis
-const cache1h = new RedisCache(3600)
+const cache10min = new RedisCache(600)
 
 // MongoDB
 connectMongo({ db: MONGO_URL })
@@ -71,7 +71,7 @@ app.use((err, req, res, next) => {
 
 // TODO: CRON JOBS
 
-graphql(app, cache1h).then(() => {
+graphql(app, cache10min).then(() => {
     console.log(`🚀 Apollo Server is listening on http://localhost:${PORT}/graphql`)
 
     server.listen(PORT, () => {
