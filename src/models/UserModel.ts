@@ -59,8 +59,8 @@ const UserSchema: Schema = new Schema(
 			// sellFilters: Object
 			default: {
 				pairs: [],
-				buyFilters: null,
-				sellFilters: null
+				buyFilters: {},
+				sellFilters: {}
 			}
 		},
 
