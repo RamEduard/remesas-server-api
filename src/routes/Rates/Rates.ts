@@ -24,3 +24,7 @@ router.get('/sell/:currencyCode', async (req: Request, res: Response) => {
 router.get('/by/:currencyCode', async (req: Request, res: Response) => {
     return rateController.byCurrencyCode(req, res)
 })
+
+router.get('/dashboard-user', async (req: Request, res: Response) => {
+    return rateController.dashboardUser(req, res)
+})

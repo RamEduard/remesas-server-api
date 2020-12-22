@@ -3,6 +3,8 @@ import { isEmpty } from 'lodash';
 
 import RedisCache from '../../utils/RedisCache'
 import LocalBitcoinsService from '../../services/LocalBitcoins/LocalBitcoinsService';
+import DashboardDataSource from '../../dataSources/DashboardDataSource';
+import { UserDocument } from '../../models/UserModel';
 
 export class RateController {
     
@@ -199,4 +201,21 @@ export class RateController {
         res.json(response)
     }
 
+    /**
+     * Dashboard by user logged in
+     * @param req 
+     * @param res 
+     */
+    async dashboardUser(req: Request<import("express-serve-static-core").ParamsDictionary>, res: Response) {
+        const dashboardDataSource = new DashboardDataSource(
+            req.app.get('service.localbitcoins'),
+            new RedisCache(600)
+        )
+
+        const response = await dashboardDataSource.dashboardByUser({}, <UserDocument>req.user!)
+
+        res.json({
+            data: response
+        })
+    }
 }
