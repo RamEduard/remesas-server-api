@@ -5,6 +5,7 @@ import RedisCache from '../../utils/RedisCache'
 import LocalBitcoinsService from '../../services/LocalBitcoins/LocalBitcoinsService';
 import DashboardDataSource from '../../dataSources/DashboardDataSource';
 import { UserDocument } from '../../models/UserModel';
+import RatesDataSource from '../../dataSources/RatesDataSource';
 
 export class RateController {
     
@@ -109,8 +110,6 @@ export class RateController {
      * @param res 
      */
     public async byCurrencyCode(req: Request<import("express-serve-static-core").ParamsDictionary>, res: Response) {
-        const localBitcoinsService:LocalBitcoinsService = req.app.get('service.localbitcoins')
-
         const { currencyCode } = req.params
         const { refresh, payment_method } = req.query
 
@@ -122,83 +121,20 @@ export class RateController {
                 message: 'Param currencyCode is invalid.'
             })
 
-        // Caché por 1h
-        const existsCache = await this._cache1h.exists(`RateController.byCurrencyCode.${currencyCode}`)
+        const dashboardDataSource = new RatesDataSource(
+            req.app.get('service.localbitcoins'),
+            new RedisCache(600)
+        )
 
-        let response
+        const response = await dashboardDataSource.ratesByCurrency(
+            currencyCode,
+            { paymentMethod: <string>payment_method!},
+            Boolean(refresh)
+        )
 
-        if (refresh || existsCache === 0) {
-            const [buy, sell, avg] = await Promise.all([
-                localBitcoinsService.getBuyBitcoinsOnline(currencyCode, <string>payment_method!),
-                localBitcoinsService.getSellBitcoinsOnline(currencyCode, <string>payment_method!),
-                localBitcoinsService.getBtcAvgAllCurrencies()
-            ])
-
-            // Buscar el más bajo
-            const tempBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
-            const sumBuyPrices = tempBuyPrices?.reduce((a, b) => a + b, 0) || []
-            // @ts-ignore
-            const avgBuy = sumBuyPrices / tempBuyPrices?.length
-
-            // Precio en USD
-            const tempUsdBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price_usd)).filter(a => a > 1).sort((a, b) => a - b) || []
-            const sumUsdBuyPrices = tempUsdBuyPrices?.reduce((a, b) => a + b, 0) || []
-            // @ts-ignore
-            const avgUsdBuy = sumUsdBuyPrices / tempUsdBuyPrices?.length
-
-            // Buscar el más alto
-            const tempSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
-            const sumSellPrices = tempSellPrices?.reduce((a, b) => a + b, 0) || []
-            // @ts-ignore
-            const avgSell = sumSellPrices / tempSellPrices?.length
-
-            // Precio en USD
-            const tempUsdSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price_usd)).filter(a => a > 1).sort((a, b) => a - b) || []
-            const sumUsdSellPrices = tempUsdSellPrices?.reduce((a, b) => a + b, 0) || []
-            // @ts-ignore
-            const avgUsdSell = sumUsdSellPrices / tempUsdSellPrices?.length
-    
-            // Avg, Buy, Sell, Spread
-            // Max, Min, Count ads
-            response = {
-                data: {
-                    avg: avg[currencyCode],
-                    buy: {
-                        avg: avgBuy,
-                        min: tempBuyPrices[0],
-                        max: tempBuyPrices[tempBuyPrices.length - 1],
-                        avg_usd: avgUsdBuy,
-                        min_usd: tempUsdBuyPrices[0],
-                        max_usd: tempUsdBuyPrices[tempUsdBuyPrices.length - 1],
-                    },
-                    sell: {
-                        avg: avgSell,
-                        min: tempSellPrices[0],
-                        max: tempSellPrices[tempSellPrices.length - 1],
-                        avg_usd: avgUsdSell,
-                        min_usd: tempUsdSellPrices[0],
-                        max_usd: tempUsdSellPrices[tempUsdSellPrices.length - 1],
-                    },
-                    spread: {
-                        avg: 1 - (avgSell / avgBuy),
-                        min: 1 - (tempSellPrices[0] / tempBuyPrices[0]),
-                        max: 1 - (tempSellPrices[tempSellPrices.length - 1] / tempBuyPrices[tempBuyPrices.length - 1]),
-                        avg_usd: 1 - (avgUsdSell / avgUsdBuy),
-                        min_usd: 1 - (tempUsdSellPrices[0] / tempUsdBuyPrices[0]),
-                        max_usd: 1 - (tempUsdSellPrices[tempUsdSellPrices.length - 1] / tempUsdBuyPrices[tempUsdBuyPrices.length - 1]),
-                    }
-                }
-            }
-
-			// add cache
-            await this._cache1h.add(`RateController.byCurrencyCode.${currencyCode}`, response)
-            
-            return res.json(response)
-        }
-
-        response = await this._cache1h.getValue(`RateController.byCurrencyCode.${currencyCode}`)
-
-        res.json(response)
+        res.json({
+            data: response
+        })
     }
 
     /**
