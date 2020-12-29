@@ -4,10 +4,17 @@ import { ApolloServer } from 'apollo-server-express'
 
 import typeDefs from './schema'
 import resolvers from './resolvers'
+
+// Datasources
 import RatesDataSource from '../dataSources/RatesDataSource'
-import RedisCache from '../utils/RedisCache'
 import AuthDataSource from '../dataSources/AuthDataSource'
 import DashboardDataSource from '../dataSources/DashboardDataSource'
+import TransactionDataSource from '../dataSources/TransactionDataSource'
+
+// Models
+import TransactionModel from '../models/TransactionModel'
+
+import RedisCache from '../utils/RedisCache'
 
 const getContext = async ({ headers, app, user }: Request<import("express-serve-static-core").ParamsDictionary>) => {
 	return {
@@ -34,7 +41,8 @@ const apollo = async (app: Express, cache10min: RedisCache) => {
 		dataSources: () => ({
 			auth: new AuthDataSource(),
 			dashboard: new DashboardDataSource(app.get('service.localbitcoins'), cache10min),
-			rates: new RatesDataSource(app.get('service.localbitcoins'), cache10min)
+			rates: new RatesDataSource(app.get('service.localbitcoins'), cache10min),
+			transactions: new TransactionDataSource(TransactionModel)
 		}),
 	})
 

@@ -187,6 +187,7 @@ export default class LocalBitcoinsService extends Api {
 
 	/**
 	 * getBuyBitcoinsOnline
+	 * TODO: Filter with paymentMethod only with /{currencyCode}/{countryCode}/{paymentMethod}
 	 * 
 	 * @param {string} currencyCode  Currency code 3 letters uppercase
 	 * @param {string} paymentMethod Valid payment method listed on /api/payment_methods

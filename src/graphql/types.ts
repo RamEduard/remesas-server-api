@@ -3,6 +3,7 @@ import { Express } from 'express'
 import AuthDataSource from '../dataSources/AuthDataSource'
 import DashboardDataSource from '../dataSources/DashboardDataSource'
 import RatesDataSource from '../dataSources/RatesDataSource'
+import TransactionDataSource from '../dataSources/TransactionDataSource'
 
 import { UserDocument } from '../models/UserModel'
 
@@ -16,4 +17,5 @@ export interface DataSources {
     auth: AuthDataSource
     dashboard: DashboardDataSource
     rates: RatesDataSource
+    transactions: TransactionDataSource
 }

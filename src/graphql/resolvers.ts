@@ -46,12 +46,32 @@ const resolvers = {
 		 */
 		localBitcoinsSell: (_: any, { currencyCode, filters }: any, { dataSources, user }: ContextResolver) =>
 			!isEmpty(user) && dataSources.rates.localBitcoinsSell(currencyCode, filters),
+		/**
+		 * Transactions
+		 */
+		transactions: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.transactions.getAll(filters, user)
 	},
 	Mutation: {
 		signin: (_: any, { email, password }: any, { dataSources }: ContextResolver) => 
 			dataSources.auth.signin(email, password),
 		signup: (_: any, { user }: any, { dataSources }: ContextResolver) => 
-			dataSources.auth.signup(user)
+			dataSources.auth.signup(user),
+		/**
+		 * Create transaction
+		 */
+		transactionCreate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.transactions.create(input, user),
+		/**
+		 * Delete transaction
+		 */
+		transactionDelete: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.transactions.delete(_id, user),
+		/**
+		 * Create transaction
+		 */
+		transactionUpdate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.transactions.update(input, user)
 	}
 }
 

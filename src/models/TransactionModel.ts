@@ -28,8 +28,8 @@ enum TransactionType {
 const TransactionSchema: Schema = new Schema(
 	{
 		type: {
-            enum: ['BUY', 'SELL'],
-            required: true
+            type: String,
+            enum: ['BUY', 'SELL']
         },
 		rate: {
             type: Number,
@@ -54,10 +54,7 @@ const TransactionSchema: Schema = new Schema(
         },
         paymentMethodDescription: String,
         images: [String],
-        comments: {
-            type: [CommentModel],
-            default: []
-        },
+        // comments: [CommentModel],
         userId: {
 			ref: 'User',
 			type: Schema.Types.ObjectId,

@@ -28,6 +28,8 @@ export default gql`
             currencyCode: String!
             filters: RatesFilters
         ): LocalBitcoinsAdResponse
+        "Transactions"
+        transactions(filters: InputTransactionFilters): [Transaction]
     }
 
     "Mutations"
@@ -36,6 +38,12 @@ export default gql`
         signin(email: String!, password: String!): JwtToken
         "Auth Register"
         signup(user: InputUser): SignUpResponse
+        "Create Transaction"
+        transactionCreate(input: InputTransaction!): Transaction
+        "Create Transaction"
+        transactionDelete(_id: String): Boolean
+        "Update Transaction"
+        transactionUpdate(input: InputTransaction!): Transaction
     }
 
     type ApiInfo {
@@ -165,5 +173,55 @@ export default gql`
     type LocalBitcoinsAdResponse {
         ad_list: [LocalBitcoinsListAd],
         ad_count: Int
+    }
+
+    input InputTransactionFilters {
+        _id: String
+    }
+
+    input InputTransaction {
+        "To update is required"
+        _id: String
+        type: TransactionType
+        rate: Float
+        currency: String
+        currencyLabel: String
+        amountBtc: Float
+        amountCurrency: Float
+        paymentMethod: String
+        paymentMethodDescription: String
+        images: [String]
+        userId: String
+    }
+
+    type Transaction {
+        _id: String
+        type: TransactionType
+        rate: Float
+        currency: String
+        currencyLabel: String
+        amountBtc: Float
+        amountCurrency: Float
+        paymentMethod: String
+        paymentMethodDescription: String
+        images: [String]
+        comments: [Comment]
+        user: User
+        userId: String
+        createdAt: String
+        updatedAt: String
+    }
+
+    enum TransactionType {
+        BUY
+        SELL
+    }
+
+    type Comment {
+        body: String
+        user: User
+        userId: String
+        createdAt: String
+        updatedAt: String
     }
 `
