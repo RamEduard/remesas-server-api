@@ -49,8 +49,13 @@ const resolvers = {
 		/**
 		 * Transactions
 		 */
-		transactions: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
-			!isEmpty(user) && dataSources.transactions.getAll(filters, user)
+		transactionsList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.transactions.getAll(filters),
+		/**
+		 * History rates
+		 */
+		historyRatesList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.historyRates.getAll(filters)
 	},
 	Mutation: {
 		signin: (_: any, { email, password }: any, { dataSources }: ContextResolver) => 
@@ -68,10 +73,25 @@ const resolvers = {
 		transactionDelete: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
 			!isEmpty(user) && dataSources.transactions.delete(_id, user),
 		/**
-		 * Create transaction
+		 * Update transaction
 		 */
 		transactionUpdate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
-			!isEmpty(user) && dataSources.transactions.update(input, user)
+			!isEmpty(user) && dataSources.transactions.update(input, user),
+		/**
+		 * Create history rate
+		 */
+		historyRateCreate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.historyRates.create(input, user),
+		/**
+		 * Delete history rate
+		 */
+		historyRateDelete: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.historyRates.delete(_id, user),
+		/**
+		 * Update history rate
+		 */
+		historyRateUpdate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.historyRates.update(input, user)
 	}
 }
 

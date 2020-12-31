@@ -1,6 +1,8 @@
 import { Document, Schema, model } from 'mongoose'
 
-export interface HistoryRateDocument extends Document {
+import { IDocument } from '../dataSources/CrudDataSource'
+
+export interface HistoryRateDocument extends IDocument {
     pair: String
     title: String
     service: String

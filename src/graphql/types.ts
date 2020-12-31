@@ -2,6 +2,7 @@ import { Express } from 'express'
 
 import AuthDataSource from '../dataSources/AuthDataSource'
 import DashboardDataSource from '../dataSources/DashboardDataSource'
+import HistoryRateDataSource from '../dataSources/HistoryRateDataSource'
 import RatesDataSource from '../dataSources/RatesDataSource'
 import TransactionDataSource from '../dataSources/TransactionDataSource'
 
@@ -16,6 +17,7 @@ export interface ContextResolver {
 export interface DataSources {
     auth: AuthDataSource
     dashboard: DashboardDataSource
+    historyRates: HistoryRateDataSource
     rates: RatesDataSource
     transactions: TransactionDataSource
 }

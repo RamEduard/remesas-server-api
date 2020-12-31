@@ -1,8 +1,9 @@
 import { Document, Schema, model } from 'mongoose'
 
+import { IDocument } from '../dataSources/CrudDataSource'
 import { UserDocument } from './UserModel'
 
-export interface CommentDocument extends Document {
+export interface CommentDocument extends IDocument {
 	body: String
     user: UserDocument,
     userId: Schema.Types.ObjectId|String

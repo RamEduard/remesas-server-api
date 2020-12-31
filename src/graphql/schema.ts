@@ -29,7 +29,8 @@ export default gql`
             filters: RatesFilters
         ): LocalBitcoinsAdResponse
         "Transactions"
-        transactions(filters: InputTransactionFilters): [Transaction]
+        transactionsList(filters: InputTransactionFilters): TransactionsList
+        historyRatesList(filters: InputHistoryRateFilters): HistoryRatesList
     }
 
     "Mutations"
@@ -44,6 +45,12 @@ export default gql`
         transactionDelete(_id: String): Boolean
         "Update Transaction"
         transactionUpdate(input: InputTransaction!): Transaction
+        "Create InputHistoryRate"
+        historyRateCreate(input: InputHistoryRate!): HistoryRate
+        "Create InputHistoryRate"
+        historyRateDelete(_id: String): Boolean
+        "Update InputHistoryRate"
+        historyRateUpdate(input: InputHistoryRate!): HistoryRate
     }
 
     type ApiInfo {
@@ -194,6 +201,14 @@ export default gql`
         userId: String
     }
 
+    type TransactionsList {
+        hasNext: Boolean
+        nextPage: Int
+        items: [Transaction]
+        pages: Int
+        total: Int
+    }
+
     type Transaction {
         _id: String
         type: TransactionType
@@ -223,5 +238,42 @@ export default gql`
         userId: String
         createdAt: String
         updatedAt: String
+    }
+
+    input InputHistoryRate {
+        pair: String
+        title: String
+        service: String
+        date: String
+        avg: Float
+        buy: Float
+        sell: Float
+        spread: Float
+        spreadPercent: Float
+    }
+
+    input InputHistoryRateFilters {
+        _id: String
+    }
+
+    type HistoryRatesList {
+        hasNext: Boolean
+        nextPage: Int
+        items: [HistoryRate]
+        pages: Int
+        total: Int
+    }
+
+    type HistoryRate {
+        _id: String
+        pair: String
+        title: String
+        service: String
+        date: String
+        avg: Float
+        buy: Float
+        sell: Float
+        spread: Float
+        spreadPercent: Float
     }
 `

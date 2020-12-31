@@ -1,9 +1,10 @@
-import { Document, Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose'
+import { IDocument } from '../dataSources/CrudDataSource'
 
 import CommentModel, { CommentDocument } from './CommentModel'
 import { UserDocument } from './UserModel'
 
-export interface TransactionDocument extends Document {
+export interface TransactionDocument extends IDocument {
     type: TransactionType
     rate: Number
     currency: String

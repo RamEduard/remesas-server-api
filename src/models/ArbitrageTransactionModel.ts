@@ -1,8 +1,9 @@
-import { Document, Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
+import { IDocument } from '../dataSources/CrudDataSource'
 import { TransactionDocument } from './TransactionModel'
 
-export interface ArbitrageTransactionDocument extends Document {
+export interface ArbitrageTransactionDocument extends IDocument {
     service: String
     buyTransactionId: Schema.Types.ObjectId
     sellTransactionId: Schema.Types.ObjectId

@@ -15,6 +15,8 @@ import TransactionDataSource from '../dataSources/TransactionDataSource'
 import TransactionModel from '../models/TransactionModel'
 
 import RedisCache from '../utils/RedisCache'
+import HistoryRateDataSource from '../dataSources/HistoryRateDataSource'
+import HistoryRateModel from '../models/HistoryRateModel'
 
 const getContext = async ({ headers, app, user }: Request<import("express-serve-static-core").ParamsDictionary>) => {
 	return {
@@ -41,6 +43,7 @@ const apollo = async (app: Express, cache10min: RedisCache) => {
 		dataSources: () => ({
 			auth: new AuthDataSource(),
 			dashboard: new DashboardDataSource(app.get('service.localbitcoins'), cache10min),
+			historyRates: new HistoryRateDataSource(HistoryRateModel),
 			rates: new RatesDataSource(app.get('service.localbitcoins'), cache10min),
 			transactions: new TransactionDataSource(TransactionModel)
 		}),
