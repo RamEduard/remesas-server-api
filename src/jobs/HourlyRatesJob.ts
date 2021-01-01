@@ -87,9 +87,8 @@ export default class HourlyRatesJob implements IJob {
             }
 
             // Write json files
-            writeFileSync(`${AppRootDir.get()}/data/hourlyBtcAvgDocs-${date.toISOString()}.json`, JSON.stringify(hourlyBtcAvgDocs, null, 2))
-
-            writeFileSync(`${AppRootDir.get()}/data/hourlyRatesDocs-${date.toISOString()}.json`, JSON.stringify(hourlyRatesDocs, null, 2))
+            // writeFileSync(`${AppRootDir.get()}/data/hourlyBtcAvgDocs-${date.toISOString()}.json`, JSON.stringify(hourlyBtcAvgDocs, null, 2))
+            // writeFileSync(`${AppRootDir.get()}/data/hourlyRatesDocs-${date.toISOString()}.json`, JSON.stringify(hourlyRatesDocs, null, 2))
 
             await HourlyBtcAvgModel.insertMany(hourlyBtcAvgDocs)
 
