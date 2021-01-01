@@ -2,24 +2,20 @@ import { Schema, model } from 'mongoose'
 
 import { IDocument } from '../dataSources/CrudDataSource'
 
-export interface HistoryRateDocument extends IDocument {
-    pair: String
+export interface HourlyBtcAvgDocument extends IDocument {
+    currency: String
     service: String
     date: Date
-    avg: Number
-    buy: Number
-    sell: Number
-    spread: Number
-    spreadPercent: Number
+    avg6h: Number
+    avg12h: Number
+    avg24h: Number
+    last: Number
+    volumeBtc: Number
 }
 
 const HistoryRateSchema: Schema = new Schema(
 	{
-		pair: {
-            type: String,
-            required: true
-        },
-		title: {
+		currency: {
             type: String,
             required: true
         },
@@ -31,23 +27,23 @@ const HistoryRateSchema: Schema = new Schema(
             type: Date,
             required: true
         },
-        avg: {
+        avg6h: {
             type: Number,
             required: true
         },
-        buy: {
+        avg12h: {
             type: Number,
             required: true
         },
-        sell: {
+        avg24h: {
             type: Number,
             required: true
         },
-        spread: {
+        last: {
             type: Number,
             required: true
         },
-        spreadPercent: {
+        volumeBtc: {
             type: Number,
             required: true
         },
@@ -55,4 +51,4 @@ const HistoryRateSchema: Schema = new Schema(
 	{ timestamps: true }
 )
 
-export default model<HistoryRateDocument>('HistoryRate', HistoryRateSchema)
+export default model<HourlyBtcAvgDocument>('HourlyBtcAvg', HistoryRateSchema)

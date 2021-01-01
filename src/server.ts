@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import compression from 'compression'
 import cors from 'cors'
 import passport from 'passport'
+import CronScheduler from 'node-cron'
 
 import { PORT, MONGO_URL } from './config'
 import connectMongo from './utils/MongooseConnection'
@@ -12,6 +13,8 @@ import graphql from './graphql'
 import { mainRouter, rateRouter, userRouter } from './routes'
 import { localBitcoinsService } from './services'
 import { isAuthenticated } from './config/passport'
+import JobsRegister from './jobs'
+import CacheFactory from './factories/CacheFactory'
 
 const app = express()
 const server = createServer(app)
@@ -27,7 +30,8 @@ app.use(passport.initialize())
 app.set('service.localbitcoins', localBitcoinsService)
 
 // Redis
-const cache10min = new RedisCache(600)
+// const cache10min = new RedisCache(600)
+const cache10min = CacheFactory.create('10m', 600)
 
 // MongoDB
 connectMongo({ db: MONGO_URL })
@@ -69,12 +73,14 @@ app.use((err, req, res, next) => {
     next()
 })
 
-// TODO: CRON JOBS
-
+// Graphql server
 graphql(app, cache10min).then(() => {
     console.log(`🚀 Apollo Server is listening on http://localhost:${PORT}/graphql`)
-
+    
     server.listen(PORT, () => {
         console.log(`🚀 Server is listening on port ${PORT}`)
     })
 })
+
+// CRON JOBS
+JobsRegister.register(CronScheduler)
