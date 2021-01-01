@@ -23,7 +23,7 @@ const CURRENCIES = [
 export default class HourlyRatesJob implements IJob {
     
     // Every hour
-    protected cronExpression = '40 */1 * * *'
+    protected cronExpression = '0 */1 * * *'
 
     constructor() {
         this.execute = this.execute.bind(this)
