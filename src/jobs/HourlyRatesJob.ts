@@ -81,7 +81,11 @@ export default class HourlyRatesJob implements IJob {
                     service,
                     pair: `${currencyCode}_BTC`,
                     buy: Number(buy?.ad_list[0].data.temp_price),
-                    sell: Number(sell?.ad_list[0].data.temp_price),
+                    sell: Number(
+                        currencyCode === 'VES' 
+                        ? sell?.ad_list[1].data.temp_price
+                        : sell?.ad_list[0].data.temp_price
+                    ),
                     avg: Number(btcAvg[currencyCode].rates.last)
                 })
             }
