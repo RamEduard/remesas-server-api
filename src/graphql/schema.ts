@@ -28,9 +28,14 @@ export default gql`
             currencyCode: String!
             filters: RatesFilters
         ): LocalBitcoinsAdResponse
-        "Transactions"
+        "Transactions List"
         transactionsList(filters: InputTransactionFilters): TransactionsList
+        "History Rate List"
         historyRatesList(filters: InputHistoryRateFilters): HistoryRatesList
+        "Hourly Rate List"
+        hourlyRatesList(filters: InputHourlyRateFilters): HourlyRatesList
+        "Hourly Btc Avg List"
+        hourlyBtcAvgList(filters: InputHourlyBtcAvgFilters): HourlyBtcAvgList
     }
 
     "Mutations"
@@ -275,5 +280,63 @@ export default gql`
         sell: Float
         spread: Float
         spreadPercent: Float
+        createdAt: String
+        updatedAt: String
+    }
+
+    input InputHourlyRateFilters {
+        _id: String
+        pair: String
+        service: String
+        date: String
+    }
+
+    type HourlyRatesList {
+        hasNext: Boolean
+        nextPage: Int
+        items: [HourlyRate]
+        pages: Int
+        total: Int
+    }
+
+    type HourlyRate {
+        _id: String
+        pair: String
+        service: String
+        date: String
+        avg: Float
+        buy: Float
+        sell: Float
+        createdAt: String
+        updatedAt: String
+    }
+
+    input InputHourlyBtcAvgFilters {
+        _id: String
+        currency: String
+        service: String
+        date: String
+    }
+
+    type HourlyBtcAvgList {
+        hasNext: Boolean
+        nextPage: Int
+        items: [HourlyBtcAvg]
+        pages: Int
+        total: Int
+    }
+
+    type HourlyBtcAvg {
+        _id: String
+        currency: String
+        service: String
+        date: String
+        avg6h: Float
+        avg12h: Float
+        avg24h: Float
+        last: Float
+        volumeBtc: Float
+        createdAt: String
+        updatedAt: String
     }
 `

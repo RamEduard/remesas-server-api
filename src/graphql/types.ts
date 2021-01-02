@@ -3,6 +3,8 @@ import { Express } from 'express'
 import AuthDataSource from '../dataSources/AuthDataSource'
 import DashboardDataSource from '../dataSources/DashboardDataSource'
 import HistoryRateDataSource from '../dataSources/HistoryRateDataSource'
+import HourlyBtcAvgDataSource from '../dataSources/HourlyBtcAvgDataSource'
+import HourlyRateDataSource from '../dataSources/HourlyRateDataSource'
 import RatesDataSource from '../dataSources/RatesDataSource'
 import TransactionDataSource from '../dataSources/TransactionDataSource'
 
@@ -18,6 +20,8 @@ export interface DataSources {
     auth: AuthDataSource
     dashboard: DashboardDataSource
     historyRates: HistoryRateDataSource
+    hourlyRates: HourlyRateDataSource
+    hourlyBycAvg: HourlyBtcAvgDataSource
     rates: RatesDataSource
     transactions: TransactionDataSource
 }

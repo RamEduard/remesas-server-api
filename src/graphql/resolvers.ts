@@ -55,7 +55,17 @@ const resolvers = {
 		 * History rates
 		 */
 		historyRatesList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
-			!isEmpty(user) && dataSources.historyRates.getAll(filters)
+			!isEmpty(user) && dataSources.historyRates.getAll(filters),
+		/**
+		 * Hourly rates
+		 */
+		hourlyRatesList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.hourlyRates.getAll(filters),
+		/**
+		 * Hourly Btc Avg
+		 */
+		historyBtcAvgList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.hourlyBycAvg.getAll(filters)
 	},
 	Mutation: {
 		signin: (_: any, { email, password }: any, { dataSources }: ContextResolver) => 
