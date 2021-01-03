@@ -1,9 +1,26 @@
 import AppRootDir from 'app-root-dir'
+import { GraphQLScalarType, Kind } from 'graphql'
 import { isEmpty } from 'lodash'
 
 import { ContextResolver } from './types'
 
 const resolvers = {
+	Date: new GraphQLScalarType({
+		name: 'Date',
+		description: 'Date custom scalar type',
+		parseValue(value) {
+			return new Date(value)
+		},
+		serialize(value) {
+			return value.getTime()
+		},
+		parseLiteral(ast) {
+			if (ast.kind === Kind.INT) {
+				return parseInt(ast.value, 10)
+			}
+			return null
+		}
+	}),
 	Query: {
         version: () => {
 			const pjson = require(`${AppRootDir.get()}/package.json`)

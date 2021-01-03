@@ -1,6 +1,8 @@
 import { gql } from 'apollo-server'
 
 export default gql`
+    scalar Date
+
     "Queries"
     type Query {
         "Versión del API"
@@ -189,6 +191,8 @@ export default gql`
 
     input InputTransactionFilters {
         _id: String
+        currency: String
+        paymentMethod: String
     }
 
     input InputTransaction {
@@ -228,8 +232,8 @@ export default gql`
         comments: [Comment]
         user: User
         userId: String
-        createdAt: String
-        updatedAt: String
+        createdAt: Date
+        updatedAt: Date
     }
 
     enum TransactionType {
@@ -241,15 +245,15 @@ export default gql`
         body: String
         user: User
         userId: String
-        createdAt: String
-        updatedAt: String
+        createdAt: Date
+        updatedAt: Date
     }
 
     input InputHistoryRate {
         pair: String
         title: String
         service: String
-        date: String
+        date: Date
         avg: Float
         buy: Float
         sell: Float
@@ -259,6 +263,9 @@ export default gql`
 
     input InputHistoryRateFilters {
         _id: String
+        date: Date
+        pair: String
+        service: String
     }
 
     type HistoryRatesList {
@@ -274,21 +281,21 @@ export default gql`
         pair: String
         title: String
         service: String
-        date: String
+        date: Date
         avg: Float
         buy: Float
         sell: Float
         spread: Float
         spreadPercent: Float
-        createdAt: String
-        updatedAt: String
+        createdAt: Date
+        updatedAt: Date
     }
 
     input InputHourlyRateFilters {
         _id: String
         pair: String
         service: String
-        date: String
+        date: Date
     }
 
     type HourlyRatesList {
@@ -303,19 +310,19 @@ export default gql`
         _id: String
         pair: String
         service: String
-        date: String
+        date: Date
         avg: Float
         buy: Float
         sell: Float
-        createdAt: String
-        updatedAt: String
+        createdAt: Date
+        updatedAt: Date
     }
 
     input InputHourlyBtcAvgFilters {
         _id: String
         currency: String
         service: String
-        date: String
+        date: Date
     }
 
     type HourlyBtcAvgList {
@@ -330,13 +337,13 @@ export default gql`
         _id: String
         currency: String
         service: String
-        date: String
+        date: Date
         avg6h: Float
         avg12h: Float
         avg24h: Float
         last: Float
         volumeBtc: Float
-        createdAt: String
-        updatedAt: String
+        createdAt: Date
+        updatedAt: Date
     }
 `

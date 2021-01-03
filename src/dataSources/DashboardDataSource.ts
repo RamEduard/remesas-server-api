@@ -1,6 +1,4 @@
 import { DataSource } from 'apollo-datasource'
-import { ApolloError } from 'apollo-server'
-import { isEmpty } from 'lodash'
 
 import { UserDocument } from '../models/UserModel'
 
