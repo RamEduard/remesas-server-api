@@ -1,6 +1,6 @@
 {
   "name": "remesas-server-api",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Remesas Server API (REST & Apollo GraphQL)",
   "scripts": {
     "copy:env-dev": "cp .env.development .env",
@@ -35,6 +35,7 @@
     "express": "^4.17.1",
     "graphql": "^15.4.0",
     "lodash": "^4.17.20",
+    "moment": "^2.29.1",
     "mongoose": "^5.10.15",
     "node-cron": "^2.0.3",
     "passport": "^0.4.1",
