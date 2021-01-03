@@ -1,6 +1,7 @@
 import AppRootDir from 'app-root-dir'
 import { schedule } from 'node-cron'
 import { writeFileSync } from 'fs'
+import moment from 'moment'
 
 import { IJob } from '.'
 
@@ -35,7 +36,7 @@ export default class HourlyRatesJob implements IJob {
         console.time('HourlyRatesJob')
         try {
             // Datetime
-            const date = new Date()
+            const date = moment.utc().set({ minute: 0, second: 0, millisecond: 0 }).toDate()
             const service = 'LocalBitcoins'
 
             // BTC avg - all currencies
