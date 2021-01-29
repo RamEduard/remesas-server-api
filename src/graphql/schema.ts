@@ -38,6 +38,8 @@ export default gql`
         hourlyRatesList(filters: InputHourlyRateFilters): HourlyRatesList
         "Hourly Btc Avg List"
         hourlyBtcAvgList(filters: InputHourlyBtcAvgFilters): HourlyBtcAvgList
+        "Orders List"
+        ordersList(filters: InputOrderFilters): OrdersList
     }
 
     "Mutations"
@@ -58,6 +60,12 @@ export default gql`
         historyRateDelete(_id: String): Boolean
         "Update InputHistoryRate"
         historyRateUpdate(input: InputHistoryRate!): HistoryRate
+        "Create Order"
+        orderCreate(input: InputOrder!): Order
+        "Create Order"
+        orderDelete(_id: String): Boolean
+        "Update Order"
+        orderUpdate(input: InputOrder!): Order
     }
 
     type ApiInfo {
@@ -345,5 +353,61 @@ export default gql`
         volumeBtc: Float
         createdAt: Date
         updatedAt: Date
+    }
+
+    type OrdersList {
+        hasNext: Boolean
+        nextPage: Int
+        items: [Order]
+        pages: Int
+        total: Int
+    }
+
+    type Order {
+        token: String
+        date: Date
+        status: StatusType
+        fromCurrency: String
+        toCurrency: String
+        baseRate: Float
+        fromAmount: Float
+        toAmount: Float
+        contactEmail: String
+        contactPhone: String
+        contactFullName: String
+        user: User
+        userSeller: User
+        createdAt: Date
+        updatedAt: Date
+    }
+
+    enum StatusType {
+        DRAFT,
+        PENDING,
+        WAITING_CONFIRMATION,
+        CONFIRMED,
+        CANCELED,
+        FINISHED
+    }
+
+    input InputOrderFilters {
+        _id: String
+        token: String
+        userId: String
+        status: StatusType
+    }
+
+    input InputOrder {
+        status: StatusType
+        fromCurrency: String!
+        toCurrency: String!
+        baseRate: Float!
+        fromAmount: Float!
+        toAmount: Float!
+        contactEmail: String!
+        contactPhone: String
+        contactFullName: String!
+        userId: String
+        userSellerId: String
     }
 `

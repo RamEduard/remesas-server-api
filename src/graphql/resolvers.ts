@@ -82,7 +82,12 @@ const resolvers = {
 		 * Hourly Btc Avg
 		 */
 		historyBtcAvgList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
-			!isEmpty(user) && dataSources.hourlyBycAvg.getAll(filters)
+			!isEmpty(user) && dataSources.hourlyBycAvg.getAll(filters),
+		/**
+		 * Orders
+		 */
+		ordersList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.orders.getAll(filters)
 	},
 	Mutation: {
 		signin: (_: any, { email, password }: any, { dataSources }: ContextResolver) => 
@@ -118,7 +123,22 @@ const resolvers = {
 		 * Update history rate
 		 */
 		historyRateUpdate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
-			!isEmpty(user) && dataSources.historyRates.update(input, user)
+			!isEmpty(user) && dataSources.historyRates.update(input, user),
+		/**
+		 * Create order
+		 */
+		orderCreate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.orders.create(input, user),
+		/**
+		 * Delete order
+		 */
+		orderDelete: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.orders.delete(_id, user),
+		/**
+		 * Update order
+		 */
+		orderUpdate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.orders.update(input, user)
 	}
 }
 

@@ -5,6 +5,7 @@ import DashboardDataSource from '../dataSources/DashboardDataSource'
 import HistoryRateDataSource from '../dataSources/HistoryRateDataSource'
 import HourlyBtcAvgDataSource from '../dataSources/HourlyBtcAvgDataSource'
 import HourlyRateDataSource from '../dataSources/HourlyRateDataSource'
+import OrderDataSource from '../dataSources/OrderDataSource'
 import RatesDataSource from '../dataSources/RatesDataSource'
 import TransactionDataSource from '../dataSources/TransactionDataSource'
 
@@ -22,6 +23,7 @@ export interface DataSources {
     historyRates: HistoryRateDataSource
     hourlyRates: HourlyRateDataSource
     hourlyBycAvg: HourlyBtcAvgDataSource
+    orders: OrderDataSource
     rates: RatesDataSource
     transactions: TransactionDataSource
 }
