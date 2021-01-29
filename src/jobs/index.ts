@@ -15,7 +15,7 @@ export interface IJob {
     schedule(cronObj: { schedule: typeof schedule }): void
 }
 
-const ENABLED_JOBS = ['HourlyRates']
+const ENABLED_JOBS = ['HourlyRates', 'DailyHistoryRates']
 
 export const register = (cronObj: { schedule: typeof schedule }) => {
     ENABLED_JOBS.forEach(jobName => {

@@ -19,10 +19,6 @@ const HistoryRateSchema: Schema = new Schema(
             type: String,
             required: true
         },
-		title: {
-            type: String,
-            required: true
-        },
         service: {
             type: String,
             required: true

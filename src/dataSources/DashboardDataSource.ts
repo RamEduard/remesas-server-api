@@ -42,6 +42,7 @@ export default class DashboardDataSource extends DataSource {
                 // Search to avg
                 const toAvg = btcAvg[to.toUpperCase()]
 
+                // TODO: buy, sell, spread (solo para remesadores/arbitros)
                 response.btcRates.push({
                     label: `${from} to ${to}`,
                     pair,

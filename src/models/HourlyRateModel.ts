@@ -6,9 +6,9 @@ export interface HourlyRateDocument extends IDocument {
     pair: String
     service: String
     date: Date
-    avg: Number
-    buy: Number
-    sell: Number
+    avg: number
+    buy: number
+    sell: number
 }
 
 const HistoryRateSchema: Schema = new Schema(
