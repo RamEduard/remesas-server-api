@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose'
 import { IDocument } from '../dataSources/CrudDataSource'
 
 import CommentModel, { CommentDocument } from './CommentModel'
+import { OrderDocument } from './OrderModel'
 import { UserDocument } from './UserModel'
 
 export interface TransactionDocument extends IDocument {
@@ -15,6 +16,8 @@ export interface TransactionDocument extends IDocument {
     paymentMethodDescription: String
     images: [String]
     comments: [CommentDocument]
+    order: OrderDocument
+    orderId: Schema.Types.ObjectId|String
     user: UserDocument
     userId: Schema.Types.ObjectId|String
     createdAt: Date
@@ -59,7 +62,11 @@ const TransactionSchema: Schema = new Schema(
         userId: {
 			ref: 'User',
 			type: Schema.Types.ObjectId,
-		}
+		},
+        orderId: {
+            ref: 'Order',
+            type: Schema.Types.ObjectId,
+        }
 	},
 	{ timestamps: true }
 )

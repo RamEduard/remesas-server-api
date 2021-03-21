@@ -89,11 +89,17 @@ export class CrudDataSource extends MongoDataSource<IDocument> implements ICrudD
 
             if (!doc) return new ApolloError(`${this.name} not found`, '404')
 
-            if (doc.userId != user._id) return new ApolloError('Forbiden', '403')
+            if (doc.userId?.toString() !== user._id.toString()) return new ApolloError('Forbiden', '403')
 
-            await this.model.updateOne({ _id: doc._id }, { $set: document })
+            Object.keys(document).map(key => {
+                // @ts-ignore
+                doc[key] = document[key]
+            })
 
-            return <IDocument>{ ...doc, ...document }
+            // await this.model.updateOne({ _id: doc._id }, { $set: document })
+            doc.save()
+
+            return <IDocument>doc
         } catch (e) {
             console.log(`Error updating ${this.name}`, e)
             return new ApolloError(`Error updating ${this.name}`, '400', e)

@@ -30,7 +30,8 @@ export default gql`
             currencyCode: String!
             filters: RatesFilters
         ): LocalBitcoinsAdResponse
-        "Transactions List"
+        "Transactions Get"
+        transactionGet(_id: String!): Transaction
         transactionsList(filters: InputTransactionFilters): TransactionsList
         "History Rate List"
         historyRatesList(filters: InputHistoryRateFilters): HistoryRatesList
@@ -38,6 +39,8 @@ export default gql`
         hourlyRatesList(filters: InputHourlyRateFilters): HourlyRatesList
         "Hourly Btc Avg List"
         hourlyBtcAvgList(filters: InputHourlyBtcAvgFilters): HourlyBtcAvgList
+        "Order Get"
+        orderGet(_id: String!): Order
         "Orders List"
         ordersList(filters: InputOrderFilters): OrdersList
     }
@@ -215,6 +218,7 @@ export default gql`
         paymentMethod: String
         paymentMethodDescription: String
         images: [String]
+        orderId: String
         userId: String
     }
 
@@ -238,6 +242,8 @@ export default gql`
         paymentMethodDescription: String
         images: [String]
         comments: [Comment]
+        order: Order
+        orderId: String
         user: User
         userId: String
         createdAt: Date
@@ -364,6 +370,7 @@ export default gql`
     }
 
     type Order {
+        _id: String
         token: String
         date: Date
         status: StatusType
@@ -375,8 +382,12 @@ export default gql`
         contactEmail: String
         contactPhone: String
         contactFullName: String
+        # User Client
+        userClient: User
+        userClientId: String
+        # User Seller
         user: User
-        userSeller: User
+        userId: String
         createdAt: Date
         updatedAt: Date
     }
@@ -398,6 +409,8 @@ export default gql`
     }
 
     input InputOrder {
+        _id: String
+        date: Date
         status: StatusType
         fromCurrency: String!
         toCurrency: String!
@@ -407,7 +420,7 @@ export default gql`
         contactEmail: String!
         contactPhone: String
         contactFullName: String!
+        userClientId: String
         userId: String
-        userSellerId: String
     }
 `

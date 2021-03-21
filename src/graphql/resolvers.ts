@@ -12,7 +12,7 @@ const resolvers = {
 			return new Date(value)
 		},
 		serialize(value) {
-			return value.getTime()
+			return value.toISOString()
 		},
 		parseLiteral(ast) {
 			if (ast.kind === Kind.INT) {
@@ -64,6 +64,11 @@ const resolvers = {
 		localBitcoinsSell: (_: any, { currencyCode, filters }: any, { dataSources, user }: ContextResolver) =>
 			!isEmpty(user) && dataSources.rates.localBitcoinsSell(currencyCode, filters),
 		/**
+		 * Transaction get
+		 */
+		transactionGet: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.transactions.getTransaction(_id),
+		/**
 		 * Transactions
 		 */
 		transactionsList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
@@ -83,6 +88,11 @@ const resolvers = {
 		 */
 		historyBtcAvgList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
 			!isEmpty(user) && dataSources.hourlyBycAvg.getAll(filters),
+		/**
+		 * Order get
+		 */
+		orderGet: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.orders.getOrder(_id),
 		/**
 		 * Orders
 		 */

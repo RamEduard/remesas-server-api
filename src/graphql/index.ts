@@ -6,21 +6,23 @@ import typeDefs from './schema'
 import resolvers from './resolvers'
 
 // Datasources
-import RatesDataSource from '../dataSources/RatesDataSource'
 import AuthDataSource from '../dataSources/AuthDataSource'
 import DashboardDataSource from '../dataSources/DashboardDataSource'
+import HistoryRateDataSource from '../dataSources/HistoryRateDataSource'
+import HourlyRateDataSource from '../dataSources/HourlyRateDataSource'
+import HourlyBtcAvgDataSource from '../dataSources/HourlyBtcAvgDataSource'
+import OrderDataSource from '../dataSources/OrderDataSource'
+import RatesDataSource from '../dataSources/RatesDataSource'
 import TransactionDataSource from '../dataSources/TransactionDataSource'
 
 // Models
+import HourlyBtcAvgModel from '../models/HourlyBtcAvgModel'
+import HistoryRateModel from '../models/HistoryRateModel'
+import HourlyRateModel from '../models/HourlyRateModel'
+import OrderModel from '../models/OrderModel'
 import TransactionModel from '../models/TransactionModel'
 
 import RedisCache from '../utils/RedisCache'
-import HistoryRateDataSource from '../dataSources/HistoryRateDataSource'
-import HistoryRateModel from '../models/HistoryRateModel'
-import HourlyRateDataSource from '../dataSources/HourlyRateDataSource'
-import HourlyRateModel from '../models/HourlyRateModel'
-import HourlyBtcAvgDataSource from '../dataSources/HourlyBtcAvgDataSource'
-import HourlyBtcAvgModel from '../models/HourlyBtcAvgModel'
 
 const getContext = async ({ headers, app, user }: Request<import("express-serve-static-core").ParamsDictionary>) => {
 	return {
@@ -51,6 +53,7 @@ const apollo = async (app: Express, cache10min: RedisCache) => {
 			hourlyRates: new HourlyRateDataSource(HourlyRateModel),
 			hourlyBycAvg: new HourlyBtcAvgDataSource(HourlyBtcAvgModel),
 			rates: new RatesDataSource(app.get('service.localbitcoins'), cache10min),
+			orders: new OrderDataSource(OrderModel),
 			transactions: new TransactionDataSource(TransactionModel)
 		}),
 	})

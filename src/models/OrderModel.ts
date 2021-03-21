@@ -16,16 +16,18 @@ export interface OrderDocument extends IDocument {
 	contactPhone: String
 	contactFullName: String
 	// User Client
-    user: UserDocument
+    userClient: UserDocument
+	userClientId: Schema.Types.ObjectId|String
+	// Seller
+	user: UserDocument
 	userId: Schema.Types.ObjectId|String
-	userSeller: UserDocument
-	userSellerId: Schema.Types.ObjectId|String
 	createdAt: Date
     updatedAt: Date
 }
 
 export enum StatusType {
 	DRAFT,
+	ERROR,
 	PENDING,
 	WAITING_CONFIRMATION,
 	CONFIRMED,
@@ -67,6 +69,19 @@ const OrderSchema: Schema = new Schema(
             type: String,
             required: true
 		},
+		status: {
+			enum: [
+				'DRAFT',
+				'ERROR',
+				'PENDING',
+				'WAITING_CONFIRMATION',
+				'CONFIRMED',
+				'FINISHED',
+				'CANCELED',
+			],
+			type: String,
+			default: 'DRAFT'
+		},
 		contactPhone: {
 			type: String,
 			default: 'None'
@@ -79,7 +94,8 @@ const OrderSchema: Schema = new Schema(
 			ref: 'User',
 			type: Schema.Types.ObjectId
 		},
-		userSellerId: {
+		// Seller
+		userId: {
 			ref: 'User',
 			type: Schema.Types.ObjectId
 		},
