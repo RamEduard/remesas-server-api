@@ -97,7 +97,17 @@ const resolvers = {
 		 * Orders
 		 */
 		ordersList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
-			!isEmpty(user) && dataSources.orders.getAll(filters)
+			!isEmpty(user) && dataSources.orders.getAll(filters),
+		/**
+		 * Transaction get
+		 */
+		arbitrageTransactionGet: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.arbitrageTransactions.getArbitrageTransaction(_id),
+		/**
+		 * Transactions
+		 */
+		arbitrageTransactionsList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.arbitrageTransactions.getAll(filters),
 	},
 	Mutation: {
 		signin: (_: any, { email, password }: any, { dataSources }: ContextResolver) => 
@@ -148,7 +158,22 @@ const resolvers = {
 		 * Update order
 		 */
 		orderUpdate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
-			!isEmpty(user) && dataSources.orders.update(input, user)
+			!isEmpty(user) && dataSources.orders.update(input, user),
+		/**
+		 * Create transaction
+		 */
+		arbitrageTransactionCreate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.arbitrageTransactions.create(input, user),
+		/**
+		 * Delete transaction
+		 */
+		arbitrageTransactionDelete: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.arbitrageTransactions.delete(_id, user),
+		/**
+		 * Update transaction
+		 */
+		arbitrageTransactionUpdate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.arbitrageTransactions.update(input, user),
 	}
 }
 

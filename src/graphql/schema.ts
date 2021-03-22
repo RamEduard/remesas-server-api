@@ -43,6 +43,10 @@ export default gql`
         orderGet(_id: String!): Order
         "Orders List"
         ordersList(filters: InputOrderFilters): OrdersList
+        "Order Get"
+        arbitrageTransactionGet(_id: String!): ArbitrageTransaction
+        "Orders List"
+        arbitrageTransactionsList(filters: InputArbitrageTransactionFilters): ArbitrageTransactionsList
     }
 
     "Mutations"
@@ -69,6 +73,12 @@ export default gql`
         orderDelete(_id: String): Boolean
         "Update Order"
         orderUpdate(input: InputOrder!): Order
+        "Create ArbitrageTransaction"
+        arbitrageTransactionCreate(input: InputArbitrageTransaction!): ArbitrageTransaction
+        "Create ArbitrageTransaction"
+        arbitrageTransactionDelete(_id: String): Boolean
+        "Update ArbitrageTransaction"
+        arbitrageTransactionUpdate(input: InputArbitrageTransaction!): ArbitrageTransaction
     }
 
     type ApiInfo {
@@ -388,6 +398,9 @@ export default gql`
         # User Seller
         user: User
         userId: String
+        # Transactions
+        transactions: [Transaction]
+        transactionIds: [String]
         createdAt: Date
         updatedAt: Date
     }
@@ -421,6 +434,57 @@ export default gql`
         contactPhone: String
         contactFullName: String!
         userClientId: String
+        userId: String
+    }
+
+    type ArbitrageTransactionsList {
+        hasNext: Boolean
+        nextPage: Int
+        items: [ArbitrageTransaction]
+        pages: Int
+        total: Int
+    }
+
+    type ArbitrageTransaction {
+        _id: String
+        service: String
+        # Buy transaction
+        buyTransactionId: String
+        buyTransaction: Transaction
+        # Sell transaction
+        sellTransactionId: String
+        sellTransaction: Transaction
+        # Order
+        order: Order
+        orderId: String
+        profitBtc: Float
+        profitPercent: Float
+        # User
+        userId: String
+        user: User
+        createdAt: Date
+        updatedAt: Date
+    }
+
+    input InputArbitrageTransactionFilters {
+        _id: String
+        orderId: String
+        userId: String
+        service: String
+    }
+
+    input InputArbitrageTransaction {
+        _id: String
+        service: String
+        # Buy transaction
+        buyTransactionId: String
+        # Sell transaction
+        sellTransactionId: String
+        # Order
+        orderId: String
+        profitBtc: Float
+        profitPercent: Float
+        # User
         userId: String
     }
 `

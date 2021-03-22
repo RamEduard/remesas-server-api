@@ -23,6 +23,8 @@ import OrderModel from '../models/OrderModel'
 import TransactionModel from '../models/TransactionModel'
 
 import RedisCache from '../utils/RedisCache'
+import ArbitrageTransactionDataSource from '../dataSources/ArbitrageTransactionDataSource'
+import ArbitrageTransactionModel from '../models/ArbitrageTransactionModel'
 
 const getContext = async ({ headers, app, user }: Request<import("express-serve-static-core").ParamsDictionary>) => {
 	return {
@@ -47,6 +49,7 @@ const apollo = async (app: Express, cache10min: RedisCache) => {
         // @ts-ignore
 		context: async ({ req }) => getContext(req),
 		dataSources: () => ({
+			arbitrageTransactions: new ArbitrageTransactionDataSource(ArbitrageTransactionModel),
 			auth: new AuthDataSource(),
 			dashboard: new DashboardDataSource(app.get('service.localbitcoins'), cache10min),
 			historyRates: new HistoryRateDataSource(HistoryRateModel),

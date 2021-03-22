@@ -1,6 +1,7 @@
 import { Document, Schema, model } from 'mongoose'
 
 import { IDocument } from '../dataSources/CrudDataSource'
+import { TransactionDocument } from './TransactionModel'
 import { UserDocument } from './UserModel'
 
 export interface OrderDocument extends IDocument {
@@ -21,6 +22,9 @@ export interface OrderDocument extends IDocument {
 	// Seller
 	user: UserDocument
 	userId: Schema.Types.ObjectId|String
+	// Transactions
+	transactions: [TransactionDocument]
+	transactionIds: Schema.Types.ObjectId|String
 	createdAt: Date
     updatedAt: Date
 }
@@ -99,6 +103,11 @@ const OrderSchema: Schema = new Schema(
 			ref: 'User',
 			type: Schema.Types.ObjectId
 		},
+		// Transactions
+		transactionIds: [{
+			ref: 'Transaction',
+			type: Schema.Types.ObjectId
+		}]
 	},
 	{ timestamps: true }
 )

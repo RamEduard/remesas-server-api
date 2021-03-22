@@ -1,5 +1,6 @@
 import { Express } from 'express'
 
+import ArbitrageTransactionDataSource from '../dataSources/ArbitrageTransactionDataSource'
 import AuthDataSource from '../dataSources/AuthDataSource'
 import DashboardDataSource from '../dataSources/DashboardDataSource'
 import HistoryRateDataSource from '../dataSources/HistoryRateDataSource'
@@ -18,6 +19,7 @@ export interface ContextResolver {
 }
 
 export interface DataSources {
+    arbitrageTransactions: ArbitrageTransactionDataSource
     auth: AuthDataSource
     dashboard: DashboardDataSource
     historyRates: HistoryRateDataSource

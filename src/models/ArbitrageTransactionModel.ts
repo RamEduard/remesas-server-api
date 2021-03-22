@@ -1,7 +1,9 @@
 import { Schema, model } from 'mongoose'
 
 import { IDocument } from '../dataSources/CrudDataSource'
+import { OrderDocument } from './OrderModel'
 import { TransactionDocument } from './TransactionModel'
+import { UserDocument } from './UserModel'
 
 export interface ArbitrageTransactionDocument extends IDocument {
     service: String
@@ -9,8 +11,12 @@ export interface ArbitrageTransactionDocument extends IDocument {
     sellTransactionId: Schema.Types.ObjectId
     buyTransaction: TransactionDocument
     sellTransaction: TransactionDocument
+    order: OrderDocument
+    orderId: String
     profitBtc: Number
     profitPercent: Number
+    userId: String
+    user: UserDocument
 }
 
 const ArbitrageTransactionSchema: Schema = new Schema(
@@ -29,6 +35,11 @@ const ArbitrageTransactionSchema: Schema = new Schema(
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
+        orderId: {
+            ref: 'Order',
+			type: Schema.Types.ObjectId,
+			required: true,
+        },
         profitBtc: {
             type: Number,
             required: true
