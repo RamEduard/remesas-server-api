@@ -7,6 +7,7 @@ import { UserDocument } from './UserModel'
 
 export interface ArbitrageTransactionDocument extends IDocument {
     service: String
+    direction: DirectionType
     buyTransactionId: Schema.Types.ObjectId
     sellTransactionId: Schema.Types.ObjectId
     buyTransaction: TransactionDocument
@@ -19,8 +20,18 @@ export interface ArbitrageTransactionDocument extends IDocument {
     user: UserDocument
 }
 
+export enum DirectionType {
+    BUY_SELL,
+    SELL_BUY
+}
+
 const ArbitrageTransactionSchema: Schema = new Schema(
 	{
+        direction: {
+            enum: ['BUY_SELL', 'SELL_BUY'],
+            type: String,
+            required: true
+        },
 		service: {
             type: String,
             required: true

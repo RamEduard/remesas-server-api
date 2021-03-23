@@ -447,6 +447,7 @@ export default gql`
 
     type ArbitrageTransaction {
         _id: String
+        direction: DirectionType
         service: String
         # Buy transaction
         buyTransactionId: String
@@ -466,8 +467,14 @@ export default gql`
         updatedAt: Date
     }
 
+    enum DirectionType {
+        BUY_SELL
+        SELL_BUY
+    }
+
     input InputArbitrageTransactionFilters {
         _id: String
+        direction: DirectionType
         orderId: String
         userId: String
         service: String
@@ -475,6 +482,7 @@ export default gql`
 
     input InputArbitrageTransaction {
         _id: String
+        direction: DirectionType
         service: String
         # Buy transaction
         buyTransactionId: String
