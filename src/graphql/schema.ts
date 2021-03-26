@@ -41,6 +41,8 @@ export default gql`
         hourlyBtcAvgList(filters: InputHourlyBtcAvgFilters): HourlyBtcAvgList
         "Order Get"
         orderGet(_id: String!): Order
+        "Order User - ID,Token"
+        orderByIdAndToken(_id: String!, token: String!): OrderUser
         "Orders List"
         ordersList(filters: InputOrderFilters): OrdersList
         "Order Get"
@@ -403,6 +405,23 @@ export default gql`
         # Transactions
         transactions: [Transaction]
         transactionIds: [String]
+        createdAt: Date
+        updatedAt: Date
+    }
+
+    type OrderUser {
+        _id: String
+        date: Date
+        status: StatusType
+        fromCurrency: String
+        toCurrency: String
+        baseRate: Float
+        fromAmount: Float
+        toAmount: Float
+        toBankInfo: String
+        contactEmail: String
+        contactPhone: String
+        contactFullName: String
         createdAt: Date
         updatedAt: Date
     }

@@ -94,6 +94,11 @@ const resolvers = {
 		orderGet: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
 			!isEmpty(user) && dataSources.orders.getOrder(_id),
 		/**
+		 * OrderUser - id,token
+		 */
+		orderByIdAndToken: (_: any, { _id, token }: any, { dataSources }: ContextResolver) =>
+			dataSources.orders.getOrderByIdAndToken(_id, token),
+		/**
 		 * Orders
 		 */
 		ordersList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 

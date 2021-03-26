@@ -63,4 +63,19 @@ export default class OrderDataSource extends CrudDataSource {
     randomString() {
         return Math.random().toString(36).substring(2)
     }
+
+    /**
+     * Obtener orden por id y token
+     * @param {string} _id Order ID
+     * @param {string} token Order token
+     */
+    async getOrderByIdAndToken(_id: string, token: string): Promise<OrderDocument|ApolloError> {
+        const order = await this.getOrder(_id)
+
+        if (isEmpty(order)) return new ApolloError('Order not found')
+
+        if (order.token !== token) return new ApolloError('Order has an invalid token.', 'Forbidden')
+
+        return order
+    }
 }
