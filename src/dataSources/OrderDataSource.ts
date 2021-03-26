@@ -55,8 +55,12 @@ export default class OrderDataSource extends CrudDataSource {
      * @param user     User Authenticated
      */
     async create(document: any, user: UserDocument): Promise<IDocument | ApolloError> {
-        document.token = '1234567890.!'
+        document.token = 'TK-' + Buffer.from(this.randomString() + this.randomString()).toString('base64')
 
         return super.create(document, user)
+    }
+
+    randomString() {
+        return Math.random().toString(36).substring(2)
     }
 }

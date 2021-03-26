@@ -13,6 +13,8 @@ export interface OrderDocument extends IDocument {
 	baseRate: Number
 	fromAmount: Number
 	toAmount: Number
+	toBankInfo: String
+	spreadPercent: Number
 	contactEmail: String
 	contactPhone: String
 	contactFullName: String
@@ -69,9 +71,29 @@ const OrderSchema: Schema = new Schema(
             type: Number,
             required: true
 		},
+		toBankInfo: {
+			type: String,
+			default: ''
+		},
+		spreadPercent: {
+			type: Number,
+			default: 0
+		},
 		contactEmail: {
             type: String,
             required: true
+		},
+		contactPhone: {
+			type: String,
+			default: 'None'
+		},
+		contactFullName: {
+			type: String,
+			required: true
+		},
+		userClientId: {
+			ref: 'User',
+			type: Schema.Types.ObjectId
 		},
 		status: {
 			enum: [
@@ -85,18 +107,6 @@ const OrderSchema: Schema = new Schema(
 			],
 			type: String,
 			default: 'DRAFT'
-		},
-		contactPhone: {
-			type: String,
-			default: 'None'
-		},
-		contactFullName: {
-			type: String,
-			required: true
-		},
-		userClientId: {
-			ref: 'User',
-			type: Schema.Types.ObjectId
 		},
 		// Seller
 		userId: {

@@ -389,6 +389,8 @@ export default gql`
         baseRate: Float
         fromAmount: Float
         toAmount: Float
+        toBankInfo: String
+        spreadPercent: Float
         contactEmail: String
         contactPhone: String
         contactFullName: String
@@ -427,6 +429,8 @@ export default gql`
         status: StatusType
         fromCurrency: String!
         toCurrency: String!
+        toBankInfo: String
+        spreadPercent: Float
         baseRate: Float!
         fromAmount: Float!
         toAmount: Float!

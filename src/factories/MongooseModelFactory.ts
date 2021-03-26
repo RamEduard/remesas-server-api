@@ -3,6 +3,7 @@ import { Document } from 'mongoose'
 import { IDocument } from '../dataSources/CrudDataSource'
 
 import ArbitrageTransactionModel from '../models/ArbitrageTransactionModel'
+import BankTransferModel from '../models/BankTransferModel'
 import CommentModel from '../models/CommentModel'
 import HistoryRateModel from '../models/HistoryRateModel'
 import OrderModel from '../models/OrderModel'
@@ -16,6 +17,9 @@ export default class MongooseModelFactory {
             // ArbitrageTransactionModel
             case 'ArbitrageTransaction':
                 return new ArbitrageTransactionModel(document)
+            // BankTransferModel
+            case 'BankTransfer':
+                return new BankTransferModel(document)
             // CommentModel
             case 'Comment':
                 return new CommentModel(document)

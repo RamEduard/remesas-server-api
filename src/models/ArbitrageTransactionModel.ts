@@ -18,6 +18,8 @@ export interface ArbitrageTransactionDocument extends IDocument {
     profitPercent: Number
     userId: String
     user: UserDocument
+    createdAt: Date
+    updatedAt: Date
 }
 
 export enum DirectionType {
