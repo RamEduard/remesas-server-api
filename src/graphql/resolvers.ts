@@ -113,6 +113,16 @@ const resolvers = {
 		 */
 		arbitrageTransactionsList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
 			!isEmpty(user) && dataSources.arbitrageTransactions.getAll(filters),
+		/**
+		 * BankTransfer get
+		 */
+		bankTransferGet: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.bankTransfers.getBankTransfer(_id),
+		/**
+		 * BankTransfer
+		 */
+		bankTransfersList: (_: any, { filters }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.bankTransfers.getAll(filters),
 	},
 	Mutation: {
 		signin: (_: any, { email, password }: any, { dataSources }: ContextResolver) => 
@@ -179,6 +189,21 @@ const resolvers = {
 		 */
 		arbitrageTransactionUpdate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
 			!isEmpty(user) && dataSources.arbitrageTransactions.update(input, user),
+		/**
+		 * Create transaction
+		 */
+		bankTransferCreate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.bankTransfers.create(input, user),
+		/**
+		 * Delete transaction
+		 */
+		bankTransferDelete: (_: any, { _id }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.bankTransfers.delete(_id, user),
+		/**
+		 * Update transaction
+		 */
+		bankTransferUpdate: (_: any, { input }: any, { dataSources, user }: ContextResolver) => 
+			!isEmpty(user) && dataSources.bankTransfers.update(input, user),
 	}
 }
 

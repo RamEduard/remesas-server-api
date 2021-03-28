@@ -2,6 +2,7 @@ import { Express } from 'express'
 
 import ArbitrageTransactionDataSource from '../dataSources/ArbitrageTransactionDataSource'
 import AuthDataSource from '../dataSources/AuthDataSource'
+import BankTransferDataSource from '../dataSources/BankTransferDataSource'
 import DashboardDataSource from '../dataSources/DashboardDataSource'
 import HistoryRateDataSource from '../dataSources/HistoryRateDataSource'
 import HourlyBtcAvgDataSource from '../dataSources/HourlyBtcAvgDataSource'
@@ -21,6 +22,7 @@ export interface ContextResolver {
 export interface DataSources {
     arbitrageTransactions: ArbitrageTransactionDataSource
     auth: AuthDataSource
+    bankTransfers: BankTransferDataSource
     dashboard: DashboardDataSource
     historyRates: HistoryRateDataSource
     hourlyRates: HourlyRateDataSource

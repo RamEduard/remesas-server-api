@@ -26,7 +26,7 @@ export interface OrderDocument extends IDocument {
 	userId: Schema.Types.ObjectId|String
 	// Transactions
 	transactions: [TransactionDocument]
-	transactionIds: Schema.Types.ObjectId|String
+	transactionIds: [Schema.Types.ObjectId|String]
 	createdAt: Date
     updatedAt: Date
 }

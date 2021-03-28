@@ -25,6 +25,8 @@ import TransactionModel from '../models/TransactionModel'
 import RedisCache from '../utils/RedisCache'
 import ArbitrageTransactionDataSource from '../dataSources/ArbitrageTransactionDataSource'
 import ArbitrageTransactionModel from '../models/ArbitrageTransactionModel'
+import BankTransferDataSource from '../dataSources/BankTransferDataSource'
+import BankTransferModel from '../models/BankTransferModel'
 
 const getContext = async ({ headers, app, user }: Request<import("express-serve-static-core").ParamsDictionary>) => {
 	return {
@@ -51,6 +53,7 @@ const apollo = async (app: Express, cache10min: RedisCache) => {
 		dataSources: () => ({
 			arbitrageTransactions: new ArbitrageTransactionDataSource(ArbitrageTransactionModel),
 			auth: new AuthDataSource(),
+			bankTransfers: new BankTransferDataSource(BankTransferModel),
 			dashboard: new DashboardDataSource(app.get('service.localbitcoins'), cache10min),
 			historyRates: new HistoryRateDataSource(HistoryRateModel),
 			hourlyRates: new HourlyRateDataSource(HourlyRateModel),

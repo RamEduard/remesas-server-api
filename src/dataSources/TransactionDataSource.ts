@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash'
+import BankTransferModel, { BankTransferDocument } from '../models/BankTransferModel'
 import OrderModel, { OrderDocument } from '../models/OrderModel'
 
 import { TransactionDocument } from '../models/TransactionModel'
@@ -18,6 +19,21 @@ export default class TransactionDataSource extends CrudDataSource {
         // return this.findOneById(transationId).then(r => <TransactionDocument>r)
         const t = await this.model.findOne({ _id: transationId })
             .then(r => <TransactionDocument>r)
+        
+        if (isEmpty(t)) return <TransactionDocument>{}
+
+        // Find bank transfers
+        if (!isEmpty(t.bankTransferIds)) {
+            t.bankTransfers = await BankTransferModel.find({ _id: {$in: t.bankTransferIds} })
+                .populate('user')
+                .exec()
+                .then(r => <[BankTransferDocument]>r)
+        } else {
+            t.bankTransfers = await BankTransferModel.find({ transactionId: t._id })
+                .populate('user')
+                .exec()
+                .then(r => <[BankTransferDocument]>r)
+        }
 
         // Find order
         if (!isEmpty(t.orderId)) {

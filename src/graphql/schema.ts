@@ -45,10 +45,14 @@ export default gql`
         orderByIdAndToken(_id: String!, token: String!): OrderUser
         "Orders List"
         ordersList(filters: InputOrderFilters): OrdersList
-        "Order Get"
+        "ArbitrageTransaction Get"
         arbitrageTransactionGet(_id: String!): ArbitrageTransaction
-        "Orders List"
+        "ArbitrageTransaction List"
         arbitrageTransactionsList(filters: InputArbitrageTransactionFilters): ArbitrageTransactionsList
+        "BankTransfer Get"
+        bankTransferGet(_id: String!): BankTransfer
+        "BankTransfer List"
+        bankTransfersList(filters: InputBankTransferFilters): BankTransfersList
     }
 
     "Mutations"
@@ -81,6 +85,12 @@ export default gql`
         arbitrageTransactionDelete(_id: String): Boolean
         "Update ArbitrageTransaction"
         arbitrageTransactionUpdate(input: InputArbitrageTransaction!): ArbitrageTransaction
+        "Create BankTransfer"
+        bankTransferCreate(input: InputBankTransfer!): BankTransfer
+        "Create BankTransfer"
+        bankTransferDelete(_id: String): Boolean
+        "Update BankTransfer"
+        bankTransferUpdate(input: InputBankTransfer!): BankTransfer
     }
 
     type ApiInfo {
@@ -253,11 +263,17 @@ export default gql`
         paymentMethod: String
         paymentMethodDescription: String
         images: [String]
+        "Comments"
         comments: [Comment]
+        "Order"
         order: Order
         orderId: String
+        "User"
         user: User
         userId: String
+        "BankTransfers"
+        bankTransfers: [BankTransfer]
+        bankTransferIds: [String]
         createdAt: Date
         updatedAt: Date
     }
@@ -516,6 +532,51 @@ export default gql`
         profitBtc: Float
         profitPercent: Float
         # User
+        userId: String
+    }
+
+    type BankTransfersList {
+        hasNext: Boolean
+        nextPage: Int
+        items: [BankTransfer]
+        pages: Int
+        total: Int
+    }
+
+    type BankTransfer {
+        _id: String
+        amount: Float
+        bankDescription: String
+        currency: String
+        date: Date
+        imageUrl: String
+        status: StatusType
+        transaction: Transaction
+        transactionId: String
+        user: User
+        userId: String
+        createdAt: Date
+        updatedAt: Date
+    }
+
+    input InputBankTransferFilters {
+        _id: String
+        bankDescription: String
+        currency: String
+        date: Date
+        status: StatusType
+        userId: String
+    }
+
+    input InputBankTransfer {
+        _id: String
+        amount: Float
+        bankDescription: String
+        currency: String
+        date: Date
+        imageUrl: String
+        status: StatusType
+        transactionId: String
         userId: String
     }
 `

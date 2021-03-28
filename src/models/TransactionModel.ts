@@ -1,7 +1,8 @@
 import { Schema, model } from 'mongoose'
-import { IDocument } from '../dataSources/CrudDataSource'
 
-import CommentModel, { CommentDocument } from './CommentModel'
+import { IDocument } from '../dataSources/CrudDataSource'
+import { BankTransferDocument } from './BankTransferModel'
+import { CommentDocument } from './CommentModel'
 import { OrderDocument } from './OrderModel'
 import { UserDocument } from './UserModel'
 
@@ -16,6 +17,8 @@ export interface TransactionDocument extends IDocument {
     paymentMethodDescription: String
     images: [String]
     comments: [CommentDocument]
+    bankTransfers: [BankTransferDocument]
+    bankTransferIds: [Schema.Types.ObjectId|String]
     order: OrderDocument
     orderId: Schema.Types.ObjectId|String
     user: UserDocument
@@ -66,7 +69,12 @@ const TransactionSchema: Schema = new Schema(
         orderId: {
             ref: 'Order',
             type: Schema.Types.ObjectId,
-        }
+        },
+        // Bank transfers
+		bankTransferIds: [{
+			ref: 'BankTransfer',
+			type: Schema.Types.ObjectId
+		}]
 	},
 	{ timestamps: true }
 )
