@@ -1,11 +1,23 @@
 import { DataSource } from 'apollo-datasource'
 import { ApolloError } from 'apollo-server'
 import { isEmpty } from 'lodash'
+import moment from 'moment'
 
 import LocalBitcoinsService from '../services/LocalBitcoins/LocalBitcoinsService'
-import { LocalBitcoinsAdResponse } from '../services/LocalBitcoins/types'
+import { LocalBitcoinsListAd, LocalBitcoinsAdResponse } from '../services/LocalBitcoins/types'
 import RedisCache from '../utils/RedisCache'
 import CalculatorInstance from '../utils/Calculator'
+
+/**
+ * Filter ads
+ * 
+ * @param ad   Ad list data
+ * @param mObj Moment object
+ * @returns 
+ */
+function filterAds(ad: LocalBitcoinsListAd, mObj = moment()) {
+    return ad.data.visible === true && mObj.diff(moment(ad.data.profile.last_online), 'hours') < 2
+}
 
 export default class RatesDataSource extends DataSource {
     
@@ -53,8 +65,12 @@ export default class RatesDataSource extends DataSource {
                 this.localBitcoinsService.getBtcAvgAllCurrencies()
             ])
 
+            const today = moment()
+
             // Buscar el más bajo
-            const tempBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
+            const tempBuyPrices = buy?.ad_list
+                .filter(ad => filterAds(ad, today))
+                .map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
             // const tempBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1) || []
             const sumBuyPrices = tempBuyPrices?.reduce((a, b) => a + b, 0) || []
             // @ts-ignore
@@ -68,7 +84,9 @@ export default class RatesDataSource extends DataSource {
             const avgUsdBuy = sumUsdBuyPrices / tempUsdBuyPrices?.length
 
             // Buscar el más alto
-            const tempSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
+            const tempSellPrices = sell?.ad_list
+                .filter(ad => filterAds(ad, today))
+                .map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
             // const tempSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1) || []
             const sumSellPrices = tempSellPrices?.reduce((a, b) => a + b, 0) || []
             // @ts-ignore
@@ -90,7 +108,7 @@ export default class RatesDataSource extends DataSource {
                 },
                 buy: {
                     avg: avgBuy,
-                    first: buy?.ad_list[0].data.temp_price,
+                    first: buy?.ad_list.filter(ad => filterAds(ad, today))[0].data.temp_price,
                     min: tempBuyPrices[0],
                     max: tempBuyPrices[tempBuyPrices.length - 1],
                     avg_usd: avgUsdBuy,
@@ -99,7 +117,7 @@ export default class RatesDataSource extends DataSource {
                 },
                 sell: {
                     avg: avgSell,
-                    first: sell?.ad_list[0].data.temp_price,
+                    first: sell?.ad_list.filter(ad => filterAds(ad, today))[0].data.temp_price,
                     min: tempSellPrices[0],
                     max: tempSellPrices[tempSellPrices.length - 1],
                     avg_usd: avgUsdSell,
