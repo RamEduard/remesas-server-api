@@ -111,7 +111,7 @@ export class RateController {
      */
     public async byCurrencyCode(req: Request<import("express-serve-static-core").ParamsDictionary>, res: Response) {
         const { currencyCode } = req.params
-        const { refresh, payment_method } = req.query
+        const { refresh, payment_method, online_provider, bank_name } = req.query
 
         if (isEmpty(currencyCode)) 
             return res.status(400).json({
@@ -128,7 +128,11 @@ export class RateController {
 
         const response = await dashboardDataSource.ratesByCurrency(
             currencyCode,
-            { paymentMethod: <string>payment_method!},
+            {
+                paymentMethod: <string>payment_method!,
+                online_provider: <string>online_provider!,
+                bank_name: <string>bank_name!
+            },
             Boolean(refresh)
         )
 

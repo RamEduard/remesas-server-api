@@ -48,10 +48,10 @@ export default class RatesDataSource extends DataSource {
     /**
      * Rates by currency
      * @param {string} currencyCode  Currency code 3 letters uppercase
-     * @param {RatesFilters} filters Filter data
+     * @param {LocalBitcoinsAdFilter} filters Filter data
      * @param {boolean} refresh      Refresh cache
      */
-    async ratesByCurrency(currencyCode: string, filters: RatesFilters, refresh = true) {
+    async ratesByCurrency(currencyCode: string, filters: LocalBitcoinsAdFilter, refresh = true) {
         // Invalid currencyCode
         if (isEmpty(currencyCode)) return new ApolloError(`Param currencyCode is invalid.`, '400')
 
@@ -60,8 +60,8 @@ export default class RatesDataSource extends DataSource {
 
         if (refresh || existsCache === 0) {
             const [buy, sell, avg] = await Promise.all([
-                this.localBitcoinsService.getBuyBitcoinsOnline(currencyCode, filters?.paymentMethod),
-                this.localBitcoinsService.getSellBitcoinsOnline(currencyCode, filters?.paymentMethod),
+                this.localBitcoinsBuy(currencyCode, filters),
+                this.localBitcoinsSell(currencyCode, filters),
                 this.localBitcoinsService.getBtcAvgAllCurrencies()
             ])
 
@@ -69,33 +69,39 @@ export default class RatesDataSource extends DataSource {
 
             // Buscar el más bajo
             const tempBuyPrices = buy?.ad_list
-                .filter(ad => filterAds(ad, today))
-                .map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
+                .filter((ad: LocalBitcoinsListAd) => filterAds(ad, today))
+                .map((a: LocalBitcoinsListAd) => Number(a.data.temp_price))
+                .sort((a: number, b: number) => a - b) || []
             // const tempBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1) || []
-            const sumBuyPrices = tempBuyPrices?.reduce((a, b) => a + b, 0) || []
+            const sumBuyPrices = tempBuyPrices?.reduce((a: number, b: number) => a + b, 0) || []
             // @ts-ignore
             const avgBuy = sumBuyPrices / tempBuyPrices?.length
 
             // Precio en USD
-            const tempUsdBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price_usd)).filter(a => a > 1).sort((a, b) => a - b) || []
+            const tempUsdBuyPrices = buy?.ad_list
+                .map((a: LocalBitcoinsListAd) => Number(a.data.temp_price_usd))
+                .sort((a: number, b: number) => a - b) || []
             // const tempUsdBuyPrices = buy?.ad_list.map(a => Number(a.data.temp_price_usd)).filter(a => a > 1) || []
-            const sumUsdBuyPrices = tempUsdBuyPrices?.reduce((a, b) => a + b, 0) || []
+            const sumUsdBuyPrices = tempUsdBuyPrices?.reduce((a: number, b: number) => a + b, 0) || []
             // @ts-ignore
             const avgUsdBuy = sumUsdBuyPrices / tempUsdBuyPrices?.length
 
             // Buscar el más alto
             const tempSellPrices = sell?.ad_list
-                .filter(ad => filterAds(ad, today))
-                .map(a => Number(a.data.temp_price)).filter(a => a > 1).sort((a, b) => a - b) || []
+                .filter((ad: LocalBitcoinsListAd) => filterAds(ad, today))
+                .map((a: LocalBitcoinsListAd) => Number(a.data.temp_price))
+                .sort((a: number, b: number) => a - b) || []
             // const tempSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price)).filter(a => a > 1) || []
-            const sumSellPrices = tempSellPrices?.reduce((a, b) => a + b, 0) || []
+            const sumSellPrices = tempSellPrices?.reduce((a: number, b: number) => a + b, 0) || []
             // @ts-ignore
             const avgSell = sumSellPrices / tempSellPrices?.length
 
             // Precio en USD
-            const tempUsdSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price_usd)).filter(a => a > 1).sort((a, b) => a - b) || []
+            const tempUsdSellPrices = sell?.ad_list
+                .map((a: LocalBitcoinsListAd) => Number(a.data.temp_price_usd))
+                .sort((a: number, b: number) => a - b) || []
             // const tempUsdSellPrices = sell?.ad_list.map(a => Number(a.data.temp_price_usd)).filter(a => a > 1) || []
-            const sumUsdSellPrices = tempUsdSellPrices?.reduce((a, b) => a + b, 0) || []
+            const sumUsdSellPrices = tempUsdSellPrices?.reduce((a: number, b: number) => a + b, 0) || []
             // @ts-ignore
             const avgUsdSell = sumUsdSellPrices / tempUsdSellPrices?.length
     
@@ -108,7 +114,7 @@ export default class RatesDataSource extends DataSource {
                 },
                 buy: {
                     avg: avgBuy,
-                    first: buy?.ad_list.filter(ad => filterAds(ad, today))[0].data.temp_price,
+                    first: buy?.ad_list.filter((ad: LocalBitcoinsListAd) => filterAds(ad, today))[0].data.temp_price,
                     min: tempBuyPrices[0],
                     max: tempBuyPrices[tempBuyPrices.length - 1],
                     avg_usd: avgUsdBuy,
@@ -117,7 +123,7 @@ export default class RatesDataSource extends DataSource {
                 },
                 sell: {
                     avg: avgSell,
-                    first: sell?.ad_list.filter(ad => filterAds(ad, today))[0].data.temp_price,
+                    first: sell?.ad_list.filter((ad: LocalBitcoinsListAd) => filterAds(ad, today))[0].data.temp_price,
                     min: tempSellPrices[0],
                     max: tempSellPrices[tempSellPrices.length - 1],
                     avg_usd: avgUsdSell,
@@ -151,10 +157,10 @@ export default class RatesDataSource extends DataSource {
     /**
      * Buy local bitcoins by currency
      * @param {string} currencyCode  Currency code 3 letters uppercase
-     * @param {RatesFilters} filters Filter data
+     * @param {LocalBitcoinsAdFilter} filters Filter data
      * @param {boolean} cache        Refresh cache
      */
-    async localBitcoinsBuy(currencyCode: string, filters: RatesFilters, cache = false): Promise<ApolloError|LocalBitcoinsAdResponse|null> {
+    async localBitcoinsBuy(currencyCode: string, filters: LocalBitcoinsAdFilter, cache = false): Promise<ApolloError|LocalBitcoinsAdResponse|null> {
         // Invalid currencyCode
         if (isEmpty(currencyCode)) return new ApolloError(`Param currencyCode is invalid.`, '400')
 
@@ -165,10 +171,21 @@ export default class RatesDataSource extends DataSource {
             ad_list: []
         }
 
+        if (filters?.online_provider) {
+            buyResult.ad_list = buyResult.ad_list.filter(ad => ad.data.online_provider === filters?.online_provider)
+            buyResult.ad_count = buyResult.ad_list.length
+        }
+
         return buyResult
     }
 
-    async localBitcoinsSell(currencyCode: string, filters: RatesFilters, cache = false): Promise<ApolloError|LocalBitcoinsAdResponse|null> {
+    /**
+     * Sell local bitcoins by currency
+     * @param {string} currencyCode  Currency code 3 letters uppercase
+     * @param {LocalBitcoinsAdFilter} filters Filter data
+     * @param {boolean} cache        Refresh cache
+     */
+    async localBitcoinsSell(currencyCode: string, filters: LocalBitcoinsAdFilter, cache = false): Promise<ApolloError|LocalBitcoinsAdResponse|null> {
         // Invalid currencyCode
         if (isEmpty(currencyCode)) return new ApolloError(`Param currencyCode is invalid.`, '400')
 
@@ -179,10 +196,26 @@ export default class RatesDataSource extends DataSource {
             ad_list: []
         }
 
+        if (filters?.online_provider) {
+            sellResult.ad_list = sellResult.ad_list.filter(ad => ad.data.online_provider === filters?.online_provider)
+            sellResult.ad_count = sellResult.ad_list.length
+        }
+
+        if (filters?.bank_name) {
+            sellResult.ad_list = sellResult.ad_list.filter(ad => ad.data.bank_name == filters?.bank_name)
+            sellResult.ad_count = sellResult.ad_list.length
+        }
+
         return sellResult
     }
 }
 
 export interface RatesFilters {
     paymentMethod: string
+}
+
+export interface LocalBitcoinsAdFilter {
+    paymentMethod: string
+    bank_name: string
+    online_provider: string
 }

@@ -18,6 +18,7 @@ export interface OrderDocument extends IDocument {
 	contactEmail: String
 	contactPhone: String
 	contactFullName: String
+	visibility: VisibilityType
 	// User Client
     userClient: UserDocument
 	userClientId: Schema.Types.ObjectId|String
@@ -39,6 +40,11 @@ export enum StatusType {
 	CONFIRMED,
 	CANCELED,
 	FINISHED
+}
+
+export enum VisibilityType {
+	PRIVATE,
+	PUBLIC
 }
 
 const OrderSchema: Schema = new Schema(
@@ -107,6 +113,11 @@ const OrderSchema: Schema = new Schema(
 			],
 			type: String,
 			default: 'DRAFT'
+		},
+		visibility: {
+			enum: ['PRIVATE', 'PUBLIC'],
+			type: String,
+			default: 'PUBLIC'
 		},
 		// Seller
 		userId: {

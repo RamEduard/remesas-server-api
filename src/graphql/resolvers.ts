@@ -42,8 +42,8 @@ const resolvers = {
 		/**
 		 * Rates by currency
 		 */
-		ratesByCurrency: (_: any, { currencyCode, filters }: any, { dataSources, user }: ContextResolver) =>
-			!isEmpty(user) && dataSources.rates.ratesByCurrency(currencyCode, filters),
+		ratesByCurrency: (_: any, { currencyCode, paymentMethod, filters }: any, { dataSources, user }: ContextResolver) =>
+			!isEmpty(user) && dataSources.rates.ratesByCurrency(currencyCode, { ...filters, paymentMethod }),
 		/**
 		 * User info
 		 */
@@ -56,13 +56,13 @@ const resolvers = {
 		/**
 		 * LocalBitcoins buy
 		 */
-		localBitcoinsBuy: (_: any, { currencyCode, filters }: any, { dataSources, user }: ContextResolver) =>
-			!isEmpty(user) && dataSources.rates.localBitcoinsBuy(currencyCode, filters),
+		localBitcoinsBuy: (_: any, { currencyCode, paymentMethod, filters }: any, { dataSources, user }: ContextResolver) =>
+			!isEmpty(user) && dataSources.rates.localBitcoinsBuy(currencyCode, { ...filters, paymentMethod }),
 		/**
 		 * LocalBitcoins buy
 		 */
-		localBitcoinsSell: (_: any, { currencyCode, filters }: any, { dataSources, user }: ContextResolver) =>
-			!isEmpty(user) && dataSources.rates.localBitcoinsSell(currencyCode, filters),
+		localBitcoinsSell: (_: any, { currencyCode, paymentMethod, filters }: any, { dataSources, user }: ContextResolver) =>
+			!isEmpty(user) && dataSources.rates.localBitcoinsSell(currencyCode, { ...filters, paymentMethod }),
 		/**
 		 * Transaction get
 		 */

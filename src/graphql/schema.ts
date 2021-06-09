@@ -13,8 +13,9 @@ export default gql`
         localBitcoinsAvgAllCurrencies: [LocalBitcoinsCurrencyAvg]
         "Rates by currency code"
         ratesByCurrency(
-            currencyCode: String
-            filters: RatesFilters
+            currencyCode: String!
+            paymentMethod: String
+            filters: LocalBitcoinsAdFilter
         ): RatesByCurrency
         "User authenticated info"
         userInfo: User
@@ -23,12 +24,14 @@ export default gql`
         "Buy on LocalBitboins by currency code"
         localBitcoinsBuy(
             currencyCode: String!
-            filters: RatesFilters
+            paymentMethod: String
+            filters: LocalBitcoinsAdFilter
         ): LocalBitcoinsAdResponse
         "Sell on LocalBitboins by currency code"
         localBitcoinsSell(
             currencyCode: String!
-            filters: RatesFilters
+            paymentMethod: String
+            filters: LocalBitcoinsAdFilter
         ): LocalBitcoinsAdResponse
         "Transactions Get"
         transactionGet(_id: String!): Transaction
@@ -110,6 +113,11 @@ export default gql`
         avg_6h: Float
         avg_12h: Float
         avg_24h: Float
+    }
+
+    input LocalBitcoinsAdFilter {
+        online_provider: String
+        bank_name: String
     }
 
     input RatesFilters {
