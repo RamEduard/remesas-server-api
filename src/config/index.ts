@@ -21,4 +21,7 @@ export const {
     JWT_SECRET = 'secret',
     // Crypto
     BCRYPT_ROUNDS = 10,
+    // SES STMP
+    SES_SMTP_USERNAME = '',
+    SES_SMTP_PASSWORD = ''
 } = process.env

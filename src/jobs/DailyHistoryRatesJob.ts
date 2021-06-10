@@ -44,7 +44,7 @@ export default class DailyHistoryRatesJob implements IJob {
 
             // Rates del día o la hora
             const hourlyRatesList = await HourlyRateModel.find({
-                date
+                date: { $eq: date }
             })
 
             const historyRateDocs: Array<any> = []

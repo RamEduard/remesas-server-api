@@ -14,6 +14,7 @@ import { mainRouter, rateRouter, userRouter } from './routes'
 import { localBitcoinsService } from './services'
 import { isAuthenticated } from './config/passport'
 import JobsRegister from './jobs'
+import QueuesRegister from './queues'
 import CacheFactory from './factories/CacheFactory'
 
 const app = express()
@@ -35,6 +36,9 @@ const cache10min = CacheFactory.create('10m', 600)
 
 // MongoDB
 connectMongo({ db: MONGO_URL })
+
+// Health Check
+app.use('/healthcheck', (req, res) => res.status(200).send('OK'))
 
 // Routes
 app.use(mainRouter)
@@ -84,3 +88,6 @@ graphql(app, cache10min).then(() => {
 
 // CRON JOBS
 JobsRegister.register(CronScheduler)
+
+// Queues
+QueuesRegister()
