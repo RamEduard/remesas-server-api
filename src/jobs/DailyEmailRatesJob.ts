@@ -50,8 +50,7 @@ const Fare = (amount: number, decimals = 2, symbol = '$') => {
 export default class DailyEmailRatesJob implements IJob {
     
     // Every day at 8am and 4pm
-    // protected cronExpression = '0 */8 * * *'
-    protected cronExpression = '0/5 * * * *'
+    protected cronExpression = '0 */8 * * *'
 
     constructor() {
         this.execute = this.execute.bind(this)
@@ -131,7 +130,6 @@ export default class DailyEmailRatesJob implements IJob {
 
     schedule(cronObj: { schedule: typeof schedule }): void {
         console.log(`<<<DailyEmailRatesJob scheduled>>>`)
-        this.execute()
-        // cronObj.schedule(this.cronExpression, this.execute)
+        cronObj.schedule(this.cronExpression, this.execute)
     }
 }
