@@ -177,7 +177,8 @@ export default class RatesDataSource extends DataSource {
         }
 
         if (filters?.bank_name) {
-            buyResult.ad_list = buyResult.ad_list.filter(ad => ad.data.bank_name.includes(filters?.bank_name))
+            const regexp = new RegExp(filters?.bank_name, 'gi')
+            buyResult.ad_list = buyResult.ad_list.filter(ad => regexp.test(ad.data.bank_name))
             buyResult.ad_count = buyResult.ad_list.length
         }
 
@@ -207,7 +208,8 @@ export default class RatesDataSource extends DataSource {
         }
 
         if (filters?.bank_name) {
-            sellResult.ad_list = sellResult.ad_list.filter(ad => ad.data.bank_name.includes(filters?.bank_name))
+            const regexp = new RegExp(filters?.bank_name, 'gi')
+            sellResult.ad_list = sellResult.ad_list.filter(ad => regexp.test(ad.data.bank_name))
             sellResult.ad_count = sellResult.ad_list.length
         }
 

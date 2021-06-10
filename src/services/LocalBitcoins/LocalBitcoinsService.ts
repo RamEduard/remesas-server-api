@@ -214,7 +214,7 @@ export default class LocalBitcoinsService extends Api {
 	 */
 	async getSellBitcoinsOnline(currencyCode: string, paymentMethod: string = 'national-bank-transfer', refresh: boolean = false): Promise<LocalBitcoinsAdResponse | null> {
 		try {
-			const url = paymentMethod ? `buy-bitcoins-online/${currencyCode}/${paymentMethod}` : `buy-bitcoins-online/${currencyCode}`
+			const url = paymentMethod ? `sell-bitcoins-online/${currencyCode}/${paymentMethod}` : `sell-bitcoins-online/${currencyCode}`
 			const response = await this.publicMethod(url, {}, '.json')
 
 			return get(response, 'data.data') || null
